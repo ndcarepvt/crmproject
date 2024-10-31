@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.msu-green{
+  color:#16423C;
+}
+.bg-msu-green{
+  background-color:#16423C;
+}
+
+.oxley{
+  color:#6A9C89;
+}
+.bg-oxley{
+  background-color:#6A9C89;
+}
+
+.american-silver{
+  color: #C4DAD2;
+}
+.bg-american-silver{
+  background-color: #C4DAD2;
+}
+
+.bright-gray{
+  color: #E9EFEC;
+}
+
+.bg-bright-gray{
+  background-color: #E9EFEC;
+}
