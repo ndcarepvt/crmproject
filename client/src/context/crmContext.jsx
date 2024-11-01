@@ -5,7 +5,7 @@ export const CRMContext = createContext(null)
 
 const CRMContextProvider = (props) => {
 
-    const URL = "https://crmproject-zeta.vercel.app"
+    const URL = import.meta.env.BACKEND_URL
     const [token, setToken] = useState(null)
     const [invoiceData, setInvoiceData] = useState(null)
     const [totalInvoiceAmount, setTotalInvoiceAmount] = useState()
