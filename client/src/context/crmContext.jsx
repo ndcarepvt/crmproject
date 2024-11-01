@@ -1,11 +1,13 @@
 import { createContext, useCallback, useEffect, useState } from "react";
 import axios from 'axios'
+import { useNavigate } from "react-router-dom";
 
 export const CRMContext = createContext(null)
 
 const CRMContextProvider = (props) => {
 
     const URL = import.meta.env.VITE_BACKEND_URL
+    const navigate = useNavigate()
     const [token, setToken] = useState(null)
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [invoiceData, setInvoiceData] = useState(null)
