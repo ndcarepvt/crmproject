@@ -23,7 +23,7 @@ const Login = () => {
         // handle form submission here
         console.log(formData);
         try {
-            const response = await axios.post( URL+'/api/user/login', formData)
+            const response = await axios.post( `${URL}/api/user/login`, formData)
             console.log(response)
             if(response.data.success){
                 setToken(response.data.authData)

@@ -5,7 +5,7 @@ export const CRMContext = createContext(null)
 
 const CRMContextProvider = (props) => {
 
-    const URL = import.meta.env.BACKEND_URL
+    const URL = import.meta.env.VITE_BACKEND_URL
     const [token, setToken] = useState(null)
     const [invoiceData, setInvoiceData] = useState(null)
     const [totalInvoiceAmount, setTotalInvoiceAmount] = useState()
@@ -30,7 +30,6 @@ const CRMContextProvider = (props) => {
     });
 
     const getInvoiceData = async (invoiceId) => {
-        console.log("Run");
 
         const url = `https://ndayurveda.info/api/invoice/byid?billid=${invoiceId}`;
 
@@ -58,7 +57,6 @@ const CRMContextProvider = (props) => {
 
         // Format date as YYYY-MM-DD
         const formattedDate = date.toISOString().split("T")[0];
-        console.log(formattedDate); // Output: "2024-10-29"
 
         // Or format with toLocaleDateString for a more readable format
         const readableDate = date.toLocaleDateString("en-GB", {
@@ -67,7 +65,6 @@ const CRMContextProvider = (props) => {
             year: 'numeric'
         });
         formData.invoiceDate = readableDate
-        console.log(readableDate);
     }
 
 
@@ -77,8 +74,8 @@ const CRMContextProvider = (props) => {
         axios.get(url)
             .then(response => {
 
-                console.log('Patient Data:', response.data);
-                console.log(response.data)
+                // console.log('Patient Data:', response.data);
+                // console.log(response.data)
                 formData.patientName = response.data.patient_name
                 formData.patientAddress = response.data.address
 
@@ -106,7 +103,7 @@ const CRMContextProvider = (props) => {
 
         try {
             const response = await axios.request(options);
-            console.log(response.data);
+            // console.log(response.data);
             setCurrencyRate(response.data.result)
             setTimeout(() => {
                 handleTotalAmount(invoiceData, response.data.result)
@@ -128,6 +125,8 @@ const CRMContextProvider = (props) => {
     
       useEffect(() => {
         loadData();
+        // console.log(URL);
+        
       }, [loadData]);
 
 
@@ -153,25 +152,25 @@ const CRMContextProvider = (props) => {
     const handleTotalAmount = (invoiceData, currencyRate) => {
         let totalAmount = 0;
 
-        console.log(currencyRate);
-        console.log(invoiceData);
+        // console.log(currencyRate);
+        // console.log(invoiceData);
 
         invoiceData.map(item => {
-            console.log(item.pbill.total);
+            // console.log(item.pbill.total);
 
             totalAmount += (Number(item.pbill.total) * currencyRate);
-            console.log(item.pbill.total, currencyRate);
-            console.log(totalAmount);
+            // console.log(item.pbill.total, currencyRate);
+            // console.log(totalAmount);
 
         });
 
         // Apply .toFixed(2) after the entire sum is calculated
         totalAmount = (totalAmount).toFixed(2)
-        console.log(totalAmount, formData.courierCost, formData.consultationCost, Number(totalAmount) + Number(formData.courierCost) + Number(formData.consultationCost));
+        // console.log(totalAmount, formData.courierCost, formData.consultationCost, Number(totalAmount) + Number(formData.courierCost) + Number(formData.consultationCost));
 
         formData.totalAmount = (Number(totalAmount) + Number(formData.courierCost) + Number(formData.consultationCost)).toFixed(2);
 
-        console.log(formData);
+        // console.log(formData);
         // setTotalInvoiceAmount(parseFloat(totalAmount));  // Convert back to number if needed
     };
 
