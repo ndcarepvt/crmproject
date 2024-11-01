@@ -5,7 +5,10 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   server:{
     proxy :{
-      '/api':"https://crmproject-zeta.vercel.app"
+      '/api':{
+        target: 'https://crmproject-zeta.vercel.app',
+        changeOrigin: true,
+      }
     }
   },
   plugins: [react()],
