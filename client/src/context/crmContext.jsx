@@ -135,7 +135,6 @@ const CRMContextProvider = (props) => {
         if (loginToken) {
             setToken(loginToken);
             setIsAuthenticated(true);
-            navigate('/dashboard')
         }
     }, []);
 
