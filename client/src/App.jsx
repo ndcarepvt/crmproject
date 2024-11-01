@@ -1,27 +1,26 @@
-import React, { useContext } from 'react'
-import Sidebar from './components/Sidebar/Sidebar'
-import { Outlet } from 'react-router-dom'
-import Navbar from './components/Navbar/Navbar'
-import { CRMContext } from './context/crmContext'
+// App.jsx
+import React, { useContext } from 'react';
+import Sidebar from './components/Sidebar/Sidebar';
+import { Outlet } from 'react-router-dom';
+import Navbar from './components/Navbar/Navbar';
+import { CRMContext } from './context/crmContext';
 
 const App = () => {
-
-  const {token} = useContext(CRMContext)
+  const { isAuthenticated } = useContext(CRMContext);
 
   return (
     <div className="w-full flex">
-    {token && (
-      <div className="w-[20%]">
-        <Sidebar />
+      {isAuthenticated && (
+        <div className="w-[20%]">
+          <Sidebar />
+        </div>
+      )}
+      <div className={isAuthenticated ? 'w-[80%]' : 'w-full'}>
+        {isAuthenticated && <Navbar />}
+        <Outlet />
       </div>
-    )}
-    <div className={token ? 'w-[80%]' : 'w-full'}>
-      {token && <Navbar />}
-      <Outlet />
     </div>
-  </div>
-  )
-}
+  );
+};
 
-export default App
-
+export default App;
