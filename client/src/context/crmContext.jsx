@@ -140,7 +140,6 @@ const CRMContextProvider = (props) => {
 
     useEffect(() => {
         loadData();
-        setIsAuthenticated(true);
     }, [loadData]);
 
     const contextValue = {
