@@ -7,6 +7,7 @@ const CRMContextProvider = (props) => {
 
     const URL = import.meta.env.VITE_BACKEND_URL
     const [token, setToken] = useState(null)
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [invoiceData, setInvoiceData] = useState(null)
     const [totalInvoiceAmount, setTotalInvoiceAmount] = useState()
     const [currencyRate, setCurrencyRate] = useState()
@@ -28,6 +29,10 @@ const CRMContextProvider = (props) => {
         courierCost: 0,
         consultationCost: 0
     });
+
+
+    // INVOICE FUNCTIONS
+
 
     const getInvoiceData = async (invoiceId) => {
 
@@ -66,7 +71,6 @@ const CRMContextProvider = (props) => {
         });
         formData.invoiceDate = readableDate
     }
-
 
     const getPatientDetail = (patientId) => {
         const url = `https://ndayurveda.info/api/invoice/patient?enqid=${patientId}`;
@@ -115,21 +119,6 @@ const CRMContextProvider = (props) => {
 
     }
 
-
-    const loadData = useCallback(() => {
-        const loginToken = localStorage.getItem("token");
-        if (loginToken) {
-          setToken(loginToken);
-        }
-      }, []);
-    
-      useEffect(() => {
-        loadData();
-        // console.log(URL);
-        
-      }, [loadData]);
-
-
     const setValuesFunc = (company) => {
         if (company == "nirogam") {
             formData.iecNumber = '1214001602'
@@ -175,21 +164,55 @@ const CRMContextProvider = (props) => {
     };
 
 
+    // Authentication Functions
+
+    const login = () => {
+        setIsAuthenticated(true)
+    };
+
+
+    const logout = () => {
+        setToken("")
+        localStorage.removeItem('token')
+        navigate('/')
+        setIsAuthenticated(false)
+    };
+
+    const loadData = useCallback(() => {
+        const loginToken = localStorage.getItem("token");
+        if (loginToken) {
+            setToken(loginToken);
+            setIsAuthenticated(true)
+        }
+    }, []);
+
+    useEffect(() => {
+        loadData();
+        // console.log(URL);
+        setIsAuthenticated(true)
+
+    }, [loadData]);
+
+
+
 
     const contextValue = {
-        getInvoiceData,
-        invoiceData,
-        setInvoiceData,
-        setFormData,
-        formData,
-        setValuesFunc,
-        handlerCurrencyFetcher,
+
+        // Variables 
+
+        URL, token, setToken,
+        formData, setFormData,
+        invoiceData, setInvoiceData,
         currencyRate, setCurrencyRate,
+        downloadBtnShow, setDownloadBtnShow,
+        isAuthenticated, setIsAuthenticated,
         totalInvoiceAmount, setTotalInvoiceAmount,
-        handleTotalAmount,
-        downloadBtnShow,
-        setDownloadBtnShow,
-        URL, token, setToken
+
+        // Functions
+
+        login, logout,
+        setValuesFunc, handlerCurrencyFetcher,
+        getInvoiceData, handleTotalAmount,
 
     }
 

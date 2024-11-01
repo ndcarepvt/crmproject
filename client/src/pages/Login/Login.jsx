@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
 
-    const {URL, token, setToken} = useContext(CRMContext)
+    const {URL, token, setToken, setIsAuthenticated} = useContext(CRMContext)
     const navigate = useNavigate()
     const [formData, setFormData] = useState({
         name: "",
@@ -15,21 +15,20 @@ const Login = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
-        console.log(formData);
+        
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         // handle form submission here
-        console.log(formData);
+        
         try {
             const response = await axios.post( `${URL}/api/user/login`, formData)
-            console.log(response)
             if(response.data.success){
                 setToken(response.data.authData)
                 localStorage.setItem('token', response.data.authData)
                 navigate('/dashboard')
-                console.log(response)
+                setIsAuthenticated(true)
             }
         } catch (error) {
             console.log(error)

@@ -4,14 +4,10 @@ import { useNavigate } from 'react-router-dom'
 
 const Navbar = () => {
 
-  const {setToken} = useContext(CRMContext)
+  const {setToken, logout} = useContext(CRMContext)
   const navigate = useNavigate()
 
-  const logout = () =>{
-    setToken("")
-    localStorage.removeItem('token')
-    navigate('/')
-  }
+  
 
   return (
     <div className='h-[70px] flex items-center justify-between px-10 bg-oxley msu-green'>

@@ -8,32 +8,60 @@ import { CRMContext } from '../../context/crmContext';
 
 const Sidebar = () => {
 
-    const {token} = useContext(CRMContext)
+    const { token } = useContext(CRMContext)
     const [showSideBar, setShowSideBar] = useState(true)
 
     return (
         <div>
 
             <div className={` w-full h-[100vh] bg-[#16423C] p-4 shadow-xl shadow-blue-gray-900/5 flex flex-col items-center  transition-all`}>
-              
-                <img src={assets.logo} alt="" width='100px'/>
+
+                <img src={assets.logo} alt="" width='100px' />
 
                 <div className={` bg-[#16423C] ${!showSideBar ? "mt-10" : ""} my-6 flex flex-col items-center `} >
 
-                    <div className='' >
-                        <ul className={`flex flex-col text-md justify-center ${showSideBar ? "items-start" : "items-center"} gap-3 text-gray-400 flex-wrap `} >
-                            <li className='w-[100%]'><a href="/dashboard" className={ `flex gap-4 px-4 p-2 w-full  hover:bg-[#bae0bf] rounded-md items-center hover:text-[#16423C] font-normal`}><FaHome />Dashbord</a></li>
-                            <li className='w-[100%]'><a href="/invoice" className={ `flex gap-4 px-4 p-2 w-full  hover:bg-[#bae0bf] rounded-md items-center hover:text-[#16423C] font-normal`}><FaFileInvoice />Invoice</a></li>
-                            
+                    <div className=''>
+                        <ul
+                            className={`flex flex-col text-md justify-center ${showSideBar ? 'items-start' : 'items-center'
+                                } gap-3 text-gray-400 flex-wrap`}
+                        >
+                            <li className='w-full'>
+                                <NavLink
+                                    to='/dashboard'
+                                    className={({ isActive }) =>
+                                        `flex gap-4 px-4 p-2 w-full rounded-md items-center font-normal ${isActive
+                                            ? 'bg-[#bae0bf] text-[#16423C]'
+                                            : 'hover:bg-[#bae0bf] hover:text-[#16423C]'
+                                        }`
+                                    }
+                                >
+                                    <FaHome />
+                                    Dashboard
+                                </NavLink>
+                            </li>
+                            <li className='w-full'>
+                                <NavLink
+                                    to='/invoice'
+                                    className={({ isActive }) =>
+                                        `flex gap-4 px-4 p-2 w-full rounded-md items-center font-normal ${isActive
+                                            ? 'bg-[#bae0bf] text-[#16423C]'
+                                            : 'hover:bg-[#bae0bf] hover:text-[#16423C]'
+                                        }`
+                                    }
+                                >
+                                    <FaFileInvoice />
+                                    Invoice
+                                </NavLink>
+                            </li>
                         </ul>
                     </div>
-                    
+
 
                 </div>
-                
+
             </div>
 
-            
+
         </div>
     )
 }
