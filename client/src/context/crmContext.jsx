@@ -6,6 +6,7 @@ export const CRMContext = createContext(null);
 
 const CRMContextProvider = (props) => {
     const URL = import.meta.env.VITE_BACKEND_URL;
+    const [loading, setLoading] = useState(false)
     const [token, setToken] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [invoiceData, setInvoiceData] = useState(null);
@@ -150,7 +151,7 @@ const CRMContextProvider = (props) => {
         downloadBtnShow, setDownloadBtnShow,
         isAuthenticated, setIsAuthenticated,
         totalInvoiceAmount, setTotalInvoiceAmount,
-        login, logout,
+        login, logout, loading, setLoading,
         setValuesFunc, handlerCurrencyFetcher,
         getInvoiceData, handleTotalAmount,
     };

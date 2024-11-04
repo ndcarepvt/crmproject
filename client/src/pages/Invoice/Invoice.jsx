@@ -5,11 +5,13 @@ import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
 import { CRMContext } from '../../context/crmContext';
 import { useNavigate } from 'react-router-dom';
 import PdfDocument from './Pdf/PdfDocument';
+import Loading from '../../components/Loading/Loading';
 
 const Invoice = () => {
   
-  const { getInvoiceData, invoiceData, formData, setFormData, setValuesFunc, currencyRate, totalInvoiceAmount, downloadBtnShow, setDownloadBtnShow } = useContext(CRMContext)
+  const { getInvoiceData, invoiceData, formData, setFormData, setValuesFunc, currencyRate, totalInvoiceAmount, downloadBtnShow, setDownloadBtnShow, loading, setLoading } = useContext(CRMContext)
   const navigate = useNavigate()
+  
 
 
   const handleChange = (e) => {
@@ -24,7 +26,9 @@ const Invoice = () => {
     console.log(formData);
     getInvoiceData(formData.invoiceId)
     setValuesFunc(formData.company)
+    setLoading(true)
     setTimeout(() => {
+      setLoading(false)
       setDownloadBtnShow(true)
     }, 5000);
     
@@ -106,6 +110,8 @@ const Invoice = () => {
           </form>
         </div>
 
+        {loading ? <Loading /> : ""}
+
         {/* <PDFViewer style={{ width: '100%', height: "100vh" }}>
             <PdfDocument data={invoiceData}/>
           </PDFViewer> */}
@@ -113,7 +119,7 @@ const Invoice = () => {
           <div className="w-full bg-msu-green text-white font-semibold p-3 rounded hover:bg-oxley transition">
             <PDFDownloadLink document={<PdfDocument data={invoiceData} formData={formData} currencyRate={currencyRate} totalInvoiceAmount={totalInvoiceAmount} />} fileName="invoice.pdf" >
               {({ blob, url, loading, error }) =>
-                loading ? 'Loading document...' : 'Download now!'
+                loading ? 'Loading document...' : 'Invoice PDF Download!'
               }
             </PDFDownloadLink>
           </div> 
