@@ -1,6 +1,7 @@
 import { createContext, useCallback, useEffect, useState } from "react";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import { currencySymbol } from "../assets/currencySymbol";
 
 export const CRMContext = createContext(null);
 
@@ -28,7 +29,9 @@ const CRMContextProvider = (props) => {
         totalAmount: 0,
         discount: '',
         courierCost: 0,
-        consultationCost: 0
+        consultationCost: 0,
+        numberToWord:"",
+        currencySymbol:""
     });
 
     const navigate = useNavigate();
@@ -45,6 +48,7 @@ const CRMContextProvider = (props) => {
             getInvoiceDate(response.data[0].pbill.dated);
             handlerCurrencyFetcher(response.data[0].pbill.currency, response.data);
             getPatientDetail(response.data[0].pbill.enq_code);
+            
         } catch (error) {
             console.error('Error fetching invoice:', error);
         }
@@ -116,8 +120,54 @@ const CRMContextProvider = (props) => {
         invoiceData.forEach(item => {
             totalAmount += Number(item.pbill.total) * currencyRate;
         });
-        formData.totalAmount = (Number(totalAmount) + Number(formData.courierCost) + Number(formData.consultationCost)).toFixed(2);
+        formData.totalAmount = Math.round((Number(totalAmount) + Number(formData.courierCost) + Number(formData.consultationCost)).toFixed(2));
+        numberToWords(formData.totalAmount)
+
     };
+
+    const currencySymbolFetch = (currency) =>{
+        currencySymbol.map(item => {
+            if(item.abbreviation === currency){
+                formData.currencySymbol = item.symbol
+                console.log(item.symbol);
+                
+            } else {
+                formData.currencySymbol = ""
+            }
+        })
+    }
+
+
+    const numberToWords = (num) => {
+        if (num === 0) return "zero";
+      
+        const belowTwenty = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", 
+                             "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", 
+                             "eighteen", "nineteen"];
+        
+        const tens = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
+        const thousands = ["", "thousand", "million", "billion"];
+      
+        function helper(n) {
+          if (n === 0) return "";
+          else if (n < 20) return belowTwenty[n] + " ";
+          else if (n < 100) return tens[Math.floor(n / 10)] + " " + helper(n % 10);
+          else return belowTwenty[Math.floor(n / 100)] + " hundred " + helper(n % 100);
+        }
+      
+        let word = "";
+        let thousandIdx = 0;
+      
+        while (num > 0) {
+          if (num % 1000 !== 0) {
+            word = helper(num % 1000) + thousands[thousandIdx] + " " + word;
+          }
+          num = Math.floor(num / 1000);
+          thousandIdx++;
+        }
+      
+        formData.numberToWord =  word.trim() + " " + "only";
+      }
 
     // Authentication Functions
     const login = () => {
@@ -151,9 +201,10 @@ const CRMContextProvider = (props) => {
         downloadBtnShow, setDownloadBtnShow,
         isAuthenticated, setIsAuthenticated,
         totalInvoiceAmount, setTotalInvoiceAmount,
-        login, logout, loading, setLoading,
+        login, logout, loading, setLoading, 
         setValuesFunc, handlerCurrencyFetcher,
-        getInvoiceData, handleTotalAmount,
+        getInvoiceData, handleTotalAmount, numberToWords,
+        currencySymbolFetch,
     };
 
     return (

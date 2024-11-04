@@ -220,7 +220,7 @@ const PdfDocument = (props) => {
               <Text style={styleObj.tableCol}>BATCH</Text>
               <Text style={[styleObj.tableCol, styleObj.tableColWidth]}>QTY</Text>
               <Text style={[styleObj.tableCol, styleObj.tableColWidth,]}>PRICE</Text>
-              <Text style={[styleObj.tableCol, styleObj.tableColWidth,]}>TOTAL</Text>
+              <Text style={[styleObj.tableCol,]}>{`TOTAL (${props.formData.currency})`}</Text>
             </View>
 
             {props.data ? props.data.map((item, index) => (
@@ -232,7 +232,7 @@ const PdfDocument = (props) => {
                   <Text style={[styleObj.tableCol, { fontSize: 10 }]}>{item.stock.batchno}</Text>
                   <Text style={[styleObj.tableCol, styleObj.tableColWidth, { fontSize: 10 }]}>{item.pbill.qty}</Text>
                   <Text style={[styleObj.tableCol, styleObj.tableColWidth, { fontSize: 10 }]}>{(item.pbill.price * props.currencyRate).toFixed(2)}</Text>
-                  <Text style={[styleObj.tableCol, styleObj.tableColWidth, { fontSize: 10 }]}>{(item.pbill.total * props.currencyRate).toFixed(2)}</Text>
+                  <Text style={[styleObj.tableCol, { fontSize: 10 }]}>{(item.pbill.total * props.currencyRate).toFixed(2)}</Text>
                 </View>
               </View>
             )) : null}
@@ -246,7 +246,7 @@ const PdfDocument = (props) => {
                 <Text style={[styleObj.tableCol, { fontSize: 10 }]}>-</Text>
                 <Text style={[styleObj.tableCol, styleObj.tableColWidth, { fontSize: 10 }]}>-</Text>
                 <Text style={[styleObj.tableCol, styleObj.tableColWidth, { fontSize: 10 }]}>-</Text>
-                <Text style={[styleObj.tableCol, styleObj.tableColWidth, { fontSize: 10 }]}>{props.consultationCost}</Text>
+                <Text style={[styleObj.tableCol, { fontSize: 10 }]}>{props.consultationCost}</Text>
               </View> : <></>}
 
             {/* Courier Cost Row */}
@@ -257,7 +257,7 @@ const PdfDocument = (props) => {
               <Text style={[styleObj.tableCol, { fontSize: 10 }]}>-</Text>
               <Text style={[styleObj.tableCol, styleObj.tableColWidth, { fontSize: 10 }]}>-</Text>
               <Text style={[styleObj.tableCol, styleObj.tableColWidth, { fontSize: 10 }]}>-</Text>
-              <Text style={[styleObj.tableCol, styleObj.tableColWidth, { fontSize: 10 }]}>{props.formData.courierCost}</Text>
+              <Text style={[styleObj.tableCol,  { fontSize: 10 }]}>{props.formData.courierCost}</Text>
             </View>
 
 
@@ -269,13 +269,13 @@ const PdfDocument = (props) => {
               <Text style={[styleObj.tableCol, { fontSize: 10 }]}>-</Text>
               <Text style={[styleObj.tableCol, styleObj.tableColWidth, { fontSize: 10 }]}>-</Text>
               <Text style={[styleObj.tableCol, styleObj.tableColWidth, { fontSize: 10 }]}></Text>
-              <Text style={[styleObj.tableCol, styleObj.tableColWidth, { fontSize: 10 }]}>{props.formData.totalAmount}</Text>
+              <Text style={[styleObj.tableCol,  { fontSize: 10 }]}>{props.formData.totalAmount} </Text>
             </View>
           </View>
 
           <View style={styleObj.highlightedSection}>
             <View>
-            <Text>In Words: Nine hundred only</Text>
+            <Text>{`In Words: ${props.formData.numberToWord}`}</Text>
             <Text style={{width:'45%', fontSize:9}}>WE HERE BY CERTIFY THAT INVOICE IS CORRECT AND STRICTLY ACCORDANCE WITH THE PERFORMA INVOICE</Text>
             </View>
             <View style={styleObj.highlightTable}>
@@ -288,8 +288,8 @@ const PdfDocument = (props) => {
                 <Text style={styleObj.highlightedCol}>{props.formData.discount}</Text>
               </View>
               <View style={[styleObj.highlightTableRow, styleObj.tableHeader]}>
-                <Text style={styleObj.highlightedCol}>Grand Total:</Text>
-                <Text style={styleObj.highlightedCol}>{props.formData.totalAmount - props.formData.discount}</Text>
+                <Text style={styleObj.highlightedCol}>{`Grand Total (${props.formData.currency}) :`}</Text>
+                <Text style={styleObj.highlightedCol}>{props.formData.totalAmount - props.formData.discount} </Text>
               </View>
             </View>
           </View>

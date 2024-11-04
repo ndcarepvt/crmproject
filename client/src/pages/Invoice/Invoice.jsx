@@ -9,7 +9,7 @@ import Loading from '../../components/Loading/Loading';
 
 const Invoice = () => {
   
-  const { getInvoiceData, invoiceData, formData, setFormData, setValuesFunc, currencyRate, totalInvoiceAmount, downloadBtnShow, setDownloadBtnShow, loading, setLoading } = useContext(CRMContext)
+  const { getInvoiceData, invoiceData, formData, setFormData, setValuesFunc, currencyRate, totalInvoiceAmount, downloadBtnShow, setDownloadBtnShow, loading, setLoading, currencySymbolFetch } = useContext(CRMContext)
   const navigate = useNavigate()
   
 
@@ -27,6 +27,7 @@ const Invoice = () => {
     getInvoiceData(formData.invoiceId)
     setValuesFunc(formData.company)
     setLoading(true)
+    currencySymbolFetch(formData.currency)
     setTimeout(() => {
       setLoading(false)
       setDownloadBtnShow(true)
