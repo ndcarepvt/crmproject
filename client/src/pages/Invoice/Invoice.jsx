@@ -5,10 +5,8 @@ import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
 import { CRMContext } from '../../context/crmContext';
 import { useNavigate } from 'react-router-dom';
 import PdfDocument from './Pdf/PdfDocument';
-import Test from '../../components/Test';
 
 const Invoice = () => {
-  
   
   const { getInvoiceData, invoiceData, formData, setFormData, setValuesFunc, currencyRate, totalInvoiceAmount, downloadBtnShow, setDownloadBtnShow } = useContext(CRMContext)
   const navigate = useNavigate()
@@ -31,10 +29,6 @@ const Invoice = () => {
     }, 5000);
     
   };
-
-  
-
-  
 
 
   return (

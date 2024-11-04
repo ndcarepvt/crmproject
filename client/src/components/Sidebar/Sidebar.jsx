@@ -6,10 +6,9 @@ import { assets } from '../../assets/assets';
 import { CRMContext } from '../../context/crmContext';
 
 
-const Sidebar = () => {
+const Sidebar = ({ showSideBar, setShowSideBar }) => {
 
     const { token } = useContext(CRMContext)
-    const [showSideBar, setShowSideBar] = useState(true)
 
     return (
         <div>
@@ -18,12 +17,11 @@ const Sidebar = () => {
 
                 <img src={assets.logo} alt="" width='100px' />
 
-                <div className={` bg-[#16423C] ${!showSideBar ? "mt-10" : ""} my-6 flex flex-col items-center `} >
+                <div className={` bg-[#16423C] my-6 flex flex-col items-center `} >
 
                     <div className=''>
                         <ul
-                            className={`flex flex-col text-md justify-center ${showSideBar ? 'items-start' : 'items-center'
-                                } gap-3 text-gray-400 flex-wrap`}
+                            className={`flex flex-col text-md justify-center gap-3 text-gray-400 flex-wrap`}
                         >
                             <li className='w-full'>
                                 <NavLink
@@ -36,7 +34,7 @@ const Sidebar = () => {
                                     }
                                 >
                                     <FaHome />
-                                    Dashboard
+                                    <span className='hidden md:block'>Dashboard</span>
                                 </NavLink>
                             </li>
                             <li className='w-full'>
@@ -50,7 +48,7 @@ const Sidebar = () => {
                                     }
                                 >
                                     <FaFileInvoice />
-                                    Invoice
+                                    <span className='hidden md:block'>Invoice</span>
                                 </NavLink>
                             </li>
                         </ul>
