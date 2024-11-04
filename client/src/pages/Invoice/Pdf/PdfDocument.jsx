@@ -246,7 +246,7 @@ const PdfDocument = (props) => {
                 <Text style={[styleObj.tableCol, { fontSize: 10 }]}>-</Text>
                 <Text style={[styleObj.tableCol, styleObj.tableColWidth, { fontSize: 10 }]}>-</Text>
                 <Text style={[styleObj.tableCol, styleObj.tableColWidth, { fontSize: 10 }]}>-</Text>
-                <Text style={[styleObj.tableCol, { fontSize: 10 }]}>{props.consultationCost}</Text>
+                <Text style={[styleObj.tableCol, { fontSize: 10 }]}>{props.formData.consultationCost}</Text>
               </View> : <></>}
 
             {/* Courier Cost Row */}

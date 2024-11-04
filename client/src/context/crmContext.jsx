@@ -30,8 +30,8 @@ const CRMContextProvider = (props) => {
         discount: '',
         courierCost: 0,
         consultationCost: 0,
-        numberToWord:"",
-        currencySymbol:""
+        numberToWord: "",
+        currencySymbol: ""
     });
 
     const navigate = useNavigate();
@@ -42,13 +42,13 @@ const CRMContextProvider = (props) => {
             const response = await axios.get(url);
             console.log('Invoice Data:', response.data);
             setInvoiceData(response.data);
-            formData.discount = response.data[0].pbill.discount;
-            formData.courierCost = response.data[0].pbill.courier;
-            formData.consultationCost = response.data[0].pbill.consultation;
-            getInvoiceDate(response.data[0].pbill.dated);
             handlerCurrencyFetcher(response.data[0].pbill.currency, response.data);
+            getInvoiceDate(response.data[0].pbill.dated);
             getPatientDetail(response.data[0].pbill.enq_code);
-            
+            formData.discount = Math.round(response.data[0].pbill.discount * currencyRate);
+            formData.courierCost = Math.round(response.data[0].pbill.courier * currencyRate);
+            formData.consultationCost = Math.round(response.data[0].pbill.consultation * currencyRate);
+
         } catch (error) {
             console.error('Error fetching invoice:', error);
         }
@@ -126,12 +126,12 @@ const CRMContextProvider = (props) => {
 
     };
 
-    const currencySymbolFetch = (currency) =>{
+    const currencySymbolFetch = (currency) => {
         currencySymbol.map(item => {
-            if(item.abbreviation === currency){
+            if (item.abbreviation === currency) {
                 formData.currencySymbol = item.symbol
                 console.log(item.symbol);
-                
+
             } else {
                 formData.currencySymbol = ""
             }
@@ -141,34 +141,34 @@ const CRMContextProvider = (props) => {
 
     const numberToWords = (num) => {
         if (num === 0) return "zero";
-      
-        const belowTwenty = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", 
-                             "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", 
-                             "eighteen", "nineteen"];
-        
+
+        const belowTwenty = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
+            "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen",
+            "eighteen", "nineteen"];
+
         const tens = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
         const thousands = ["", "thousand", "million", "billion"];
-      
+
         function helper(n) {
-          if (n === 0) return "";
-          else if (n < 20) return belowTwenty[n] + " ";
-          else if (n < 100) return tens[Math.floor(n / 10)] + " " + helper(n % 10);
-          else return belowTwenty[Math.floor(n / 100)] + " hundred " + helper(n % 100);
+            if (n === 0) return "";
+            else if (n < 20) return belowTwenty[n] + " ";
+            else if (n < 100) return tens[Math.floor(n / 10)] + " " + helper(n % 10);
+            else return belowTwenty[Math.floor(n / 100)] + " hundred " + helper(n % 100);
         }
-      
+
         let word = "";
         let thousandIdx = 0;
-      
+
         while (num > 0) {
-          if (num % 1000 !== 0) {
-            word = helper(num % 1000) + thousands[thousandIdx] + " " + word;
-          }
-          num = Math.floor(num / 1000);
-          thousandIdx++;
+            if (num % 1000 !== 0) {
+                word = helper(num % 1000) + thousands[thousandIdx] + " " + word;
+            }
+            num = Math.floor(num / 1000);
+            thousandIdx++;
         }
-      
-        formData.numberToWord =  word.trim() + " " + "only";
-      }
+
+        formData.numberToWord = word.trim() + " " + "only";
+    }
 
     // Authentication Functions
     const login = () => {
@@ -202,7 +202,7 @@ const CRMContextProvider = (props) => {
         downloadBtnShow, setDownloadBtnShow,
         isAuthenticated, setIsAuthenticated,
         totalInvoiceAmount, setTotalInvoiceAmount,
-        login, logout, loading, setLoading, 
+        login, logout, loading, setLoading,
         setValuesFunc, handlerCurrencyFetcher,
         getInvoiceData, handleTotalAmount, numberToWords,
         currencySymbolFetch,
