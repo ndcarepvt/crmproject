@@ -121,7 +121,8 @@ const CRMContextProvider = (props) => {
             totalAmount += Number(item.pbill.total) * currencyRate;
         });
         formData.totalAmount = Math.round((Number(totalAmount) + Number(formData.courierCost) + Number(formData.consultationCost)).toFixed(2));
-        numberToWords(formData.totalAmount)
+        const number = Number(formData.totalAmount - formData.discount)
+        numberToWords(number)
 
     };
 
