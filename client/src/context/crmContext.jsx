@@ -45,9 +45,8 @@ const CRMContextProvider = (props) => {
             handlerCurrencyFetcher(response.data[0].pbill.currency, response.data);
             getInvoiceDate(response.data[0].pbill.dated);
             getPatientDetail(response.data[0].pbill.enq_code);
-            formData.discount = Math.round(response.data[0].pbill.discount * currencyRate);
-            formData.courierCost = Math.round(response.data[0].pbill.courier * currencyRate);
-            formData.consultationCost = Math.round(response.data[0].pbill.consultation * currencyRate);
+            
+         
 
         } catch (error) {
             console.error('Error fetching invoice:', error);
@@ -89,6 +88,13 @@ const CRMContextProvider = (props) => {
         try {
             const response = await axios.request(options);
             setCurrencyRate(response.data.result);
+            let currencyRate = response.data.result
+            console.log(response.data.result);
+
+            formData.discount = Math.round(Number(invoiceData[0].pbill.discount) * currencyRate);
+            formData.courierCost = Math.round(Number(invoiceData[0].pbill.courier) * currencyRate);
+            formData.consultationCost = Math.round(Number(invoiceData[0].pbill.consultation) * currencyRate);
+             
             setTimeout(() => {
                 handleTotalAmount(invoiceData, response.data.result);
             }, 2000);
