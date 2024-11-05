@@ -83,5 +83,23 @@ const loginUser = async (req, res) => {
     }
 };
 
+const getUserDetails = async (req, res) => {
+    const { userId } = req.body;
 
-export {loginUser, registerUser}
+    try {
+        // Use .lean() to get plain JavaScript object instead of Mongoose document
+        const userDetail = await User.findById(userId).select('-password').lean();
+
+        if (userDetail) {
+            res.send({ success: true, userData: userDetail, message: "Complete Data Fetching" });
+        } else {
+            res.status(404).send({ success: false, message: "User not found" });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ success: false, message: "Server Error" });
+    }
+}
+
+
+export {loginUser, registerUser, getUserDetails}
