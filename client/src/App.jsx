@@ -5,6 +5,8 @@ import { Outlet } from 'react-router-dom';
 import Navbar from './components/Navbar/Navbar';
 import { CRMContext } from './context/crmContext';
 import Loading from './components/Loading/Loading';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   const { isAuthenticated, loading } = useContext(CRMContext);
@@ -12,6 +14,7 @@ const App = () => {
 
   return (
     <div className="w-full flex">
+      <ToastContainer />
       {loading ? <div className='absolute z-50 bg-transparent w-[100vw] h-[100vh]'>
       <div className='h-[100vh] bg-black opacity-55 w-[100%] absolute top-[0%] '></div>
       <Loading />

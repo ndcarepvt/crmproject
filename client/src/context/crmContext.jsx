@@ -2,12 +2,14 @@ import { createContext, useCallback, useEffect, useState } from "react";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import { currencySymbol } from "../assets/currencySymbol";
+import { toast } from "react-toastify";
 
 export const CRMContext = createContext(null);
 
 const CRMContextProvider = (props) => {
     const URL = import.meta.env.VITE_BACKEND_URL;
     const [loading, setLoading] = useState(false)
+    const [userData, setUserData] = useState(null)
     const [token, setToken] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [invoiceData, setInvoiceData] = useState(null);
@@ -40,13 +42,11 @@ const CRMContextProvider = (props) => {
         const url = `https://ndayurveda.info/api/invoice/byid?billid=${invoiceId}`;
         try {
             const response = await axios.get(url);
-            console.log('Invoice Data:', response.data);
             setInvoiceData(response.data);
             handlerCurrencyFetcher(response.data[0].pbill.currency, response.data);
             getInvoiceDate(response.data[0].pbill.dated);
             getPatientDetail(response.data[0].pbill.enq_code);
-            
-         
+
 
         } catch (error) {
             console.error('Error fetching invoice:', error);
@@ -89,18 +89,17 @@ const CRMContextProvider = (props) => {
             const response = await axios.request(options);
             setCurrencyRate(response.data.result);
             let currencyRate = response.data.result
-            console.log(response.data.result);
 
             formData.discount = Math.round(Number(invoiceData[0].pbill.discount) * currencyRate);
             formData.courierCost = Math.round(Number(invoiceData[0].pbill.courier) * currencyRate);
             formData.consultationCost = Math.round(Number(invoiceData[0].pbill.consultation) * currencyRate);
-             
+
             setTimeout(() => {
                 handleTotalAmount(invoiceData, response.data.result);
             }, 2000);
         } catch (error) {
             console.error(error);
-        }
+        };
     };
 
     const setValuesFunc = (company) => {
@@ -136,7 +135,6 @@ const CRMContextProvider = (props) => {
         currencySymbol.map(item => {
             if (item.abbreviation === currency) {
                 formData.currencySymbol = item.symbol
-                console.log(item.symbol);
 
             } else {
                 formData.currencySymbol = ""
@@ -188,10 +186,48 @@ const CRMContextProvider = (props) => {
         setIsAuthenticated(false);
     };
 
+    const fetchUserData = useCallback(async (token) => {
+        try {
+            const response = await axios.post(URL+"/api/user/getuserdetails", {}, { headers: { token } });
+            if (response.data.success) {
+                setUserData(response.data.userData);
+                toast.success(response.data.message);
+
+            } else {
+                console.log("hi");
+
+                if (response.data.message === "Expire token, please log in again." || response.data.message === "Invalid token, please log in again.") {
+                    toast.error(response.data.message);
+                    setToken("");
+                    localStorage.removeItem("token");
+                    navigate('/');
+                } else if (notification) {
+                    toast.error(response.data.message);
+
+                }
+            }
+        } catch (error) {
+
+            if (error.response.data.message == "Expired token, please log in again." || error.response.data.message == "Invalid token, please log in again.") {
+                console.log(error.response.data.message);
+                toast.error(error.response.data.message);
+                localStorage.removeItem("token");
+                setToken("");
+                setIsAuthenticated(false)
+                navigate('/');
+
+            } else if (notification) {
+                toast.error(error.response.data.message);
+            }
+            console.log(error);
+        }
+    }, []);
+
     const loadData = useCallback(() => {
         const loginToken = localStorage.getItem("token");
         if (loginToken) {
             setToken(loginToken);
+            fetchUserData(loginToken)
             setIsAuthenticated(true);
         }
     }, []);
