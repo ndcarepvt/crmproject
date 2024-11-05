@@ -201,7 +201,7 @@ const CRMContextProvider = (props) => {
                     setToken("");
                     localStorage.removeItem("token");
                     navigate('/');
-                } else if (notification) {
+                } else {
                     toast.error(response.data.message);
 
                 }
@@ -216,7 +216,7 @@ const CRMContextProvider = (props) => {
                 setIsAuthenticated(false)
                 navigate('/');
 
-            } else if (notification) {
+            } else {
                 toast.error(error.response.data.message);
             }
             console.log(error);
