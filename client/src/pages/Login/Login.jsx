@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import axios from 'axios';
 import { CRMContext } from '../../context/crmContext';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Login = () => {
 
@@ -28,6 +29,7 @@ const Login = () => {
                 setToken(response.data.authData)
                 localStorage.setItem('token', response.data.authData)
                 setLoading(false)
+                toast(response.data.message)
                 navigate('/dashboard')
                 setIsAuthenticated(true)
 

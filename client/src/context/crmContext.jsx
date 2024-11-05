@@ -182,6 +182,7 @@ const CRMContextProvider = (props) => {
     const logout = () => {
         setToken("");
         localStorage.removeItem('token');
+        toast.info("User Logout")
         navigate('/'); // Navigate after clearing token
         setIsAuthenticated(false);
     };
@@ -191,6 +192,8 @@ const CRMContextProvider = (props) => {
             const response = await axios.post(URL+"/api/user/getuserdetails", {}, { headers: { token } });
             if (response.data.success) {
                 setUserData(response.data.userData);
+                console.log(response.data.userData);
+                
                 toast.success(response.data.message);
 
             } else {
