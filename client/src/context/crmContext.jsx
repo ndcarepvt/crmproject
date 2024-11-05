@@ -43,6 +43,8 @@ const CRMContextProvider = (props) => {
         try {
             const response = await axios.get(url);
             setInvoiceData(response.data);
+            console.log(response.data);
+            
             handlerCurrencyFetcher(response.data[0].pbill.currency, response.data);
             getInvoiceDate(response.data[0].pbill.dated);
             getPatientDetail(response.data[0].pbill.enq_code);
