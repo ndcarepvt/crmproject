@@ -16,7 +16,7 @@ const CRMContextProvider = (props) => {
     const [totalInvoiceAmount, setTotalInvoiceAmount] = useState();
     const [currencyRate, setCurrencyRate] = useState();
     const [otherData, setOtherData] = useState();
-    const [downloadBtnShow, setDownloadBtnShow] = useState();
+    
     const [formData, setFormData] = useState({
         invoiceId: '',
         invoiceDate: '',
@@ -130,7 +130,6 @@ const CRMContextProvider = (props) => {
         formData.totalAmount = Math.round((Number(totalAmount) + Number(formData.courierCost) + Number(formData.consultationCost)).toFixed(2));
         const number = Number(formData.totalAmount - formData.discount)
         numberToWords(number)
-
     };
 
     const currencySymbolFetch = (currency) => {
@@ -246,7 +245,6 @@ const CRMContextProvider = (props) => {
         formData, setFormData,
         invoiceData, setInvoiceData,
         currencyRate, setCurrencyRate,
-        downloadBtnShow, setDownloadBtnShow,
         isAuthenticated, setIsAuthenticated,
         totalInvoiceAmount, setTotalInvoiceAmount,
         login, logout, loading, setLoading,
