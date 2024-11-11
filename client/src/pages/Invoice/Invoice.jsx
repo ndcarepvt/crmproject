@@ -10,7 +10,7 @@ import EstimatedBill from './Pdf/documents/EstimatedBill';
 
 const Invoice = () => {
 
-  const { getInvoiceData, invoiceData, formData, setFormData, setValuesFunc, currencyRate, totalInvoiceAmount, loading, setLoading, currencySymbolFetch } = useContext(CRMContext)
+  const { getInvoiceData, userData, invoiceData, formData, setFormData, setValuesFunc, currencyRate, totalInvoiceAmount, loading, setLoading, currencySymbolFetch } = useContext(CRMContext)
   const tax = "tax"
   const estimate = "estimate"
   const [taxdownloadBtnShow, setTaxDownloadBtnShow] = useState(false);
@@ -64,18 +64,18 @@ const Invoice = () => {
   return (
     <div>
       <nav className='flex gap-5 px-20 py-4'>
-        <button
+        {userData.role === "account" ? <button
           onClick={() => handleGeneratePDF(tax)}
           className="w-full bg-msu-green text-white font-semibold p-3 rounded hover:bg-oxley transition"
         >
           Tax Bill
-        </button>
-        <button
+        </button>:<></>}
+        {userData.role === "sales" ? <button
           onClick={() => handleGeneratePDF(estimate)}
           className="w-full bg-msu-green text-white font-semibold p-3 rounded hover:bg-oxley transition"
         >
           Estimated Bill
-        </button>
+        </button>:<></>}
       </nav>
       <div className="max-w-md mx-auto my-8 p-8 bg-white rounded-lg shadow-lg">
 
@@ -165,6 +165,8 @@ const Invoice = () => {
           </PDFDownloadLink>
         </div>
       </div> : ''}
+
+
       {estimatedownloadBtnShow ? <div className="max-w-md mx-auto my-8 p-8 bg-white rounded-lg shadow-lg">
         <div className="w-full bg-msu-green text-white font-semibold p-3 rounded hover:bg-oxley transition">
           <PDFDownloadLink document={<EstimatedBill data={invoiceData} formData={formData} currencyRate={currencyRate} totalInvoiceAmount={totalInvoiceAmount} />} fileName="invoice.pdf" >

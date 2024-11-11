@@ -29,6 +29,10 @@ app.get('/' ,(req, res)=>{
   res.send("API Working")
 })
 
+app.post('/webhook' ,(req, res)=>{
+  console.log(req.body)
+})
+
 app.listen(port,()=>{
   console.log(`The server is running on http://localhost:${port}`)
 })
