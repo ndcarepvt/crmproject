@@ -250,7 +250,8 @@ const CRMContextProvider = (props) => {
         login, logout, loading, setLoading,
         setValuesFunc, handlerCurrencyFetcher,
         getInvoiceData, handleTotalAmount, numberToWords,
-        currencySymbolFetch, userData, setUserData
+        currencySymbolFetch, userData, setUserData,
+        fetchUserData
     };
 
     return (

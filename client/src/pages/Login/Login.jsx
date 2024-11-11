@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 
 const Login = () => {
 
-    const {URL, token, setToken, setIsAuthenticated, setLoading} = useContext(CRMContext)
+    const {URL, token, setToken, setIsAuthenticated, setLoading, fetchUserData} = useContext(CRMContext)
     const navigate = useNavigate()
     const [formData, setFormData] = useState({
         name: "",
@@ -28,6 +28,7 @@ const Login = () => {
             if(response.data.success){
                 setToken(response.data.authData)
                 localStorage.setItem('token', response.data.authData)
+                fetchUserData( response.data.authData )
                 setLoading(false)
                 toast(response.data.message)
                 navigate('/dashboard')
