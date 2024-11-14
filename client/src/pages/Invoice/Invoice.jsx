@@ -66,13 +66,13 @@ const Invoice = () => {
       <nav className='flex gap-5 px-20 py-4'>
         {userData?.role === "accountant" ? <button
           onClick={() => handleGeneratePDF(tax)}
-          className="w-full bg-msu-green text-white font-semibold p-3 rounded hover:bg-oxley transition"
+          className="w-full bg-msu-green text-white max-w-[100px] font-semibold p-3 rounded hover:bg-oxley transition"
         >
           Tax Bill
         </button>:<></>}
         {userData?.role === "sales" ? <button
           onClick={() => handleGeneratePDF(estimate)}
-          className="w-full bg-msu-green text-white font-semibold p-3 rounded hover:bg-oxley transition"
+          className="w-full bg-msu-green text-white max-w-[100px] font-semibold p-3 rounded hover:bg-oxley transition"
         >
           Estimated Bill
         </button>:<></>}
