@@ -98,7 +98,10 @@ const IncentiveTable = ({ setIncentiveFormShow }) => {
             <th className="p-4 text-left font-semibold">Recived Amount</th>
             <th className="p-4 text-left font-semibold">Status</th>
             <th className="p-4 text-left font-semibold">Date</th>
-            <th className="p-4 text-left font-semibold">Edit</th>
+            {
+              userData.role != "sales" ? <th className="p-4 text-left font-semibold">Edit</th>:""
+            }
+            
           </tr>
         </thead>
         <tbody>
@@ -125,6 +128,7 @@ const IncentiveTable = ({ setIncentiveFormShow }) => {
               </td>
 
               <td className="p-4">{product.date}</td>
+              
             </tr>
           ))}
         </tbody>

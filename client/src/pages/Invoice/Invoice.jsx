@@ -140,16 +140,16 @@ const Invoice = () => {
     numberToWords(number)
   };
 
-  const currencySymbolFetch = (currency) => {
-    currencySymbol.map(item => {
-      if (item.abbreviation === currency) {
-        formData.currencySymbol = item.symbol
+  // const currencySymbolFetch = (currency) => {
+  //   currencySymbol.map(item => {
+  //     if (item.abbreviation === currency) {
+  //       formData.currencySymbol = item.symbol
 
-      } else {
-        formData.currencySymbol = ""
-      }
-    })
-  }
+  //     } else {
+  //       formData.currencySymbol = ""
+  //     }
+  //   })
+  // }
 
 
   const numberToWords = (num) => {
@@ -199,7 +199,7 @@ const Invoice = () => {
     getInvoiceData(formData.invoiceId);
     setValuesFunc(formData.company);
     setLoading(true);
-    currencySymbolFetch(formData.currency);
+    // currencySymbolFetch(formData.currency);
     showDownloadButton(pdfType);
   };
 
