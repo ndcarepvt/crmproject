@@ -1,7 +1,5 @@
 import React, { useContext } from 'react'
 import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
-import { CRMContext } from '../../../context/crmContext';
-// import { CRMContext } from '../../../context/crmContext';
 
 const PdfDocument = (props) => {
 

@@ -1,9 +1,9 @@
 import express from 'express'
 import cors from 'cors'
 import 'dotenv/config'
-import invoiceRouter from './routes/invoice.route.js'
 import connectDB from './config/db.js'
 import userRouter from './routes/user.route.js'
+import incentiveRouter from './routes/incentive.route.js'
 
 
 // App Config
@@ -21,7 +21,7 @@ app.use(cors({
 connectDB()
 
 // API Routes
-app.use('/api/invoice', invoiceRouter)
+app.use('/api/incentive', incentiveRouter)
 app.use('/api/user', userRouter)
 
 

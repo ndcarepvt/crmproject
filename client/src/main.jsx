@@ -6,7 +6,6 @@ import App from './App.jsx';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Dashboard from './pages/Dashboard/Dashboard.jsx';
 import Invoice from './pages/Invoice/Invoice.jsx';
-import Pdf from './pages/Invoice/Pdf/PdfDocument.jsx';
 import CRMContextProvider, { CRMContext } from './context/crmContext.jsx';
 import Login from './pages/Login/Login.jsx';
 
@@ -24,30 +23,17 @@ createRoot(document.getElementById('root')).render(
         <Routes>
           <Route path="/" element={<App />}>
             <Route index element={<Login />} />
-            <Route
-              path="dashboard"
-              element={
+            <Route path="dashboard" element={
                 <SecureRoute>
                   <Dashboard />
                 </SecureRoute>
-              }
-            />
-            <Route
-              path="invoice"
-              element={
+              } />
+            <Route path="invoice" element={
                 <SecureRoute>
                   <Invoice />
                 </SecureRoute>
-              }
-            />
-            <Route
-              path="pdf"
-              element={
-                <SecureRoute>
-                  <Pdf />
-                </SecureRoute>
-              }
-            />
+              } />
+
           </Route>
         </Routes>
       </CRMContextProvider>
