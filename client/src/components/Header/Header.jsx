@@ -14,7 +14,7 @@ const Header = ({ showSideBar, setShowSideBar }) => {
             </div>
             <div>
                 <h1 className="text-2xl text-center font-semibold">Hello, Margaret</h1>
-                <p className="text-gray-600">Track team progress here. You almost reached a goal!</p>
+                <p className="text-gray-600 hidden md:block">Track team progress here. You almost reached a goal!</p>
             </div>
             {/* <div className="text-sm text-gray-500">
                 <span>16 May, 2023</span>

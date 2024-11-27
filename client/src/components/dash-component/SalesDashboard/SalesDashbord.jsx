@@ -7,21 +7,19 @@ const SalesDashbord = () => {
     const [incentiveFormShow, setIncentiveFormShow] = useState(false)
 
     return (
-        <div className="flex h-screen bg-gray-100">
+        <div className="flex h-screen bg-gray-100 w-[100%]">
 
             <div>
                 {incentiveFormShow ? <IncentiveForm setIncentiveFormShow={setIncentiveFormShow} /> : <></>}
             </div>
 
-            {/* Main Content */}
-            <div className="flex flex-col flex-1">
-                {/* <Header /> */}
+            {/* <Header /> */}
 
-                <div className="p-6">
-                    {/* Current Tasks */}
-                    <IncentiveTable setIncentiveFormShow={setIncentiveFormShow} />
-                </div>
+            <div className="p-6 w-[100%]">
+                {/* Current Tasks */}
+                <IncentiveTable setIncentiveFormShow={setIncentiveFormShow} />
             </div>
+
         </div>
     )
 }

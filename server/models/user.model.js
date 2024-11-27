@@ -1,10 +1,14 @@
 import mongoose from 'mongoose'
 
 const userSchema = mongoose.Schema({
+    // userId:{
+    //     type:Number,
+    //     unique:true,
+    //     required:true
+    // },
     name: {
         type: String,
         required: true,
-        unique: true
     },
     email: {
         type: String,
@@ -23,7 +27,7 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    page: {
+    pages: {
         type: Array,
         required: true
     },

@@ -3,47 +3,62 @@ import { User } from "../models/user.model.js"
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
-const registerUser = async (req, res)=>{
-    const {name,email,password,phoneNumber,role} = req.body;
-    
-    
-    
+const registerUser = async (req, res) => {
+    const { name, email, password, phoneNumber, role, pages, commission } = req.body;
+
     try {
-        const existUser = await User.findOne({name})
-        
-        if(existUser){
-            res.send({success:false, message:"User already exist"})
+        // Check if user already exists
+        const existUser = await User.findOne({ email });
+        if (existUser) {
+            return res.send({ success: false, message: "User already exists" });
         }
 
-        if(!validator.isEmail(email)){
-            res.send({success:false,message:"Enter valid Email"})
+        // Validate email
+        if (!validator.isEmail(email)) {
+            return res.send({ success: false, message: "Enter a valid email" });
         }
 
-        if(!password.length > 4){
-            res.send({success:false, message:"Enter Strong Password"})
+        // Validate password length
+        if (password.length <= 4) {
+            return res.send({ success: false, message: "Enter a strong password" });
         }
 
-        const salt = await bcrypt.genSalt(10)
-        const hashPassword = await bcrypt.hash(password,salt)
+        // Generate a hashed password
+        const salt = await bcrypt.genSalt(10);
+        const hashPassword = await bcrypt.hash(password, salt);
 
+        // // Find the highest userId and increment
+        // const lastUser = await User.findOne().sort({ userId: -1 }); // Get the user with the highest userId
+        // const userId = lastUser ? lastUser.userId + 1 : 1; // Increment or start at 1 if no users exist
+
+            
+        // Create a new user
         const newUser = new User({
-            name:name,
-            email:email,
-            password:hashPassword,
-            phoneNumber:phoneNumber,
-            role:role
-        })
+            // userId: userId,
+            name: name,
+            email: email,
+            password: hashPassword,
+            phoneNumber: phoneNumber,
+            role: role,
+            pages: pages,
+            commission: commission
+        });
 
-        const user = await newUser.save()
-        const token = generateToken(user._id)
+        // Save the user to the database
+        const user = await newUser.save();
 
-        res.send({success:true,authData:token, message:"User Registered"})
+        // Generate a token
+        const token = generateToken(user._id);
+
+        // Send a response
+        res.send({ success: true, authData: token, message: "User Registered" });
 
     } catch (error) {
-        console.log(error)
-        res.json({success:false,message:"Error"})
+        console.log(error);
+        res.json({ success: false, message: "Error" });
     }
-}
+};
+
 
 const generateToken = (id) =>{
     return jwt.sign({id},process.env.JWT_SECRET,{expiresIn : '1h'})
@@ -83,9 +98,13 @@ const loginUser = async (req, res) => {
     }
 };
 
+
+
+
 const getUserDetails = async (req, res) => {
     const { userId } = req.body;
-
+    console.log("deatil func run");
+    
     try {
         // Use .lean() to get plain JavaScript object instead of Mongoose document
         const userDetail = await User.findById(userId).select('-password').lean();

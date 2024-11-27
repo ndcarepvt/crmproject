@@ -9,9 +9,17 @@ const incentiveSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  userId:{
+    type:String,
+    required:true
+  },
   invoiceId: {
     type: Number,
     required: true
+  },
+  invoiceCurrency:{
+    type:String,
+    required:true
   },
   commission: {
     type: Number,
@@ -21,8 +29,9 @@ const incentiveSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  recievedAmount: {
+  receivedAmount: {
     type: Number,
+    default:0,
   },
   commissionAmount: {
     type: Number,
@@ -31,9 +40,17 @@ const incentiveSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  createdDate: {
+    type: String,
+    required: true,
+  },
+  InvoiceDate: {
+    type: String,
+    // required: true,
+  },
   date: {
-    type: Date,
-    default: Date.now
+    type: String,
+    required: true,
   },
 }, { timestamps: true });
 

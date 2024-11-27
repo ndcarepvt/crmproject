@@ -26,11 +26,13 @@ const DashSidebar = () => {
   // Filter routes based on `pages` (user's accessible pages)
   const accessibleRoutes = allRoutes.filter((route) => pages.includes(route.path.slice(1)));
 
+  
+
   return (
-    <div className="w-64 bg-gray-900 flex flex-col">
+    <div  className="w-64 bg-gray-900 flex flex-col " >
       {/* Logo Section */}
-      <div className="p-4 text-xl font-bold">
-        <img src={assets.logo} alt="Logo" width="100px" className="mx-auto" />
+      <div className=" text-xl font-bold my-8">
+        <img src={assets.logo} alt="Logo" width="80px" className="md:mx-auto" />
       </div>
 
       {/* Navigation Section */}
@@ -47,7 +49,7 @@ const DashSidebar = () => {
                 }
               >
                 {route.icon && <span>{route.icon}</span>}
-                {route.name}
+                <span className="md:block hidden">{route.name}</span> 
               </NavLink>
             </li>
           ))}

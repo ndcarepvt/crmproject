@@ -10,15 +10,7 @@ const CRMContextProvider = (props) => {
     const URL = import.meta.env.VITE_BACKEND_URL;
     const [loading, setLoading] = useState(false)
     const [incentives, setIncentives] = useState([]);
-    const [userData, setUserData] = useState({
-        delete: "false",
-        email: "nd.rajatthakur007@gmail.com",
-        name: "rajat",
-        phoneNumber: 7087013086,
-        role: "sales",
-        commission:'10',
-        pages: ["dashboard", "invoice", "users", "reports", "settings"],
-    })
+    const [userData, setUserData] = useState({})
     const [token, setToken] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const navigate = useNavigate();
@@ -43,7 +35,6 @@ const CRMContextProvider = (props) => {
             if (response.data.success) {
                 setUserData(response.data.userData);
                 console.log(response.data.userData);
-
                 toast.success(response.data.message);
 
             } else {
