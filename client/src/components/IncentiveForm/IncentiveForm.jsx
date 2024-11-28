@@ -179,16 +179,19 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
 
     formData.commissionAmount = commissionAmount
 
-    console.log(formData);
-    setTimeout(async () => {
+   
       try {
 
         const response = await axios.post(`${URL}/api/incentive/update`, formData);
+
         if (response.data.success) {
           toast.success(response.data.message)
           setIncentiveFormShow(false)
           setLoading(false)
           fetchIncentive()
+        } else {
+          toast.error(response.data.message)
+          setLoading(false)
         }
 
         console.log("Response:", response.data);
@@ -196,7 +199,7 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
         console.error("Error:", err);
         alert("Failed to update incentive. Please try again.");
       }
-    }, 2000)
+  
   };
 
   return (

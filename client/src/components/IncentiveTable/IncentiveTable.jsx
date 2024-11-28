@@ -20,9 +20,7 @@ const IncentiveTable = ({ setIncentiveFormShow, setIncentiveFormData }) => {
 
   useEffect(() => {
 
-
     fetchIncentive()
-
 
   }, [token])
 
