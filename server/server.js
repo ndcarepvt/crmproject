@@ -4,6 +4,7 @@ import 'dotenv/config'
 import connectDB from './config/db.js'
 import userRouter from './routes/user.route.js'
 import incentiveRouter from './routes/incentive.route.js'
+import cookieParser from 'cookie-parser'
 
 
 // App Config
@@ -14,8 +15,13 @@ const app = express()
 // Intialize middleware
 app.use(express.json())
 app.use(cors({
-  origin: 'https://ndayurveda.vercel.app' // or '*' to allow all origins
+  origin: 'https://ndayurveda.vercel.app', // or '*' to allow all origins
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true, // If your frontend is sending cookies or authentication headers
+  optionsSuccessStatus: 204 // For legacy browser support
 }));
+app.use(express.urlencoded({extended: true}))
+app.use(cookieParser())
 
 // Connect Database
 connectDB()
