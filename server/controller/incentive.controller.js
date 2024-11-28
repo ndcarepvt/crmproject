@@ -66,9 +66,9 @@ export const addIncentive = async (req, res) => {
 
     // Save to the database
     const savedIncentive = await incentive.save();
-    res.status(201).json({ message: 'Incentive added successfully', data: savedIncentive });
+    res.status(201).json({success:true, message: 'Incentive added successfully', data: savedIncentive });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to add incentive', error: error.message });
+    res.status(500).json({success:false, message: 'Failed to add incentive', error: error.message });
   }
 };
 
@@ -77,9 +77,9 @@ export const getAllIncentives = async (req, res) => {
 
   try {
     const incentives = await Incentive.find();
-    res.status(200).json({ message: 'Incentives retrieved successfully', data: incentives });
+    res.status(200).json({success:true, message: 'Incentives retrieved successfully', data: incentives });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to retrieve incentives', error: error.message });
+    res.status(500).json({success:false, message: 'Failed to retrieve incentives', error: error.message });
   }
 };
 
@@ -96,9 +96,9 @@ export const getIncentivesByNameAndRole = async (req, res) => {
     console.log(incentives);
     
 
-    res.status(200).json({ message: 'Filtered incentives retrieved successfully', data: incentives });
+    res.status(200).json({success:true, message: 'Filtered incentives retrieved successfully', data: incentives });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to retrieve filtered incentives', error: error.message });
+    res.status(500).json({success:false, message: 'Failed to retrieve filtered incentives', error: error.message });
   }
 };
 
