@@ -15,7 +15,7 @@ const app = express()
 // Intialize middleware
 app.use(express.json())
 app.use(cors({
-  origin: 'https://ndayurveda.vercel.app', // or '*' to allow all origins
+  origin: '*', // or '*' to allow all origins
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true, // If your frontend is sending cookies or authentication headers
   optionsSuccessStatus: 204 // For legacy browser support
