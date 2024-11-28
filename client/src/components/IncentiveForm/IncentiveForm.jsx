@@ -132,6 +132,8 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
 
   const postData = async () => {
     try {
+      console.log("run", formData);
+      
       const response = await axios.post(`${URL}/api/incentive/add`, formData, { headers: { token } });
 
       if (response.data.success) {
