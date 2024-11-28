@@ -30,16 +30,18 @@ const Login = () => {
                 localStorage.setItem('token', response.data.authData)
                 fetchUserData( response.data.authData )
                 setLoading(false)
-                toast(response.data.message)
+                toast.success(response.data.message)
                 navigate('/dashboard')
                 setIsAuthenticated(true)
 
             } else {
                 setLoading(false)
+                toast.error(response.data.message)
             }
         } catch (error) {
             console.log(error)
             setLoading(false)
+            toast.error(response.data.message)
         }
 
 

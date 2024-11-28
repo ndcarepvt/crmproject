@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { CRMContext } from "../../context/crmContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
   const { userData, setIncentives, URL, token } = useContext(CRMContext); // Get user data from context
@@ -129,11 +130,18 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
   const postData = async () => {
     try {
       const response = await axios.post(`${URL}/api/incentive/add`, formData, { headers: { token } });
-      alert("Incentive added successfully");
-      navigate('/dashboard');
-      console.log("Response:", response.data);
+
+      if (response.data.success) {
+        toast.success(response.data.message)
+        setIncentiveFormShow(false)
+        navigate('/dashboard');
+        console.log("Response:", response.data);
+      }
+
+
     } catch (err) {
       console.error("Error:", err);
+      toast.error(err.message)
     }
   };
 
@@ -162,7 +170,7 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
     const commissionAmount = calculateCommission(receivedAmount, commissionRate)
     console.log(commissionAmount);
 
-    
+
     formData.commissionAmount = commissionAmount
 
     console.log(formData);
@@ -170,7 +178,11 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
       try {
 
         const response = await axios.post(`${URL}/api/incentive/update`, formData);
-        alert("Incentive updated successfully");
+        if (response.data.success) {
+          toast.success(response.data.message)
+          setIncentiveFormShow(false)
+        }
+
         console.log("Response:", response.data);
       } catch (err) {
         console.error("Error:", err);

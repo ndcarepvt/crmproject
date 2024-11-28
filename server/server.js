@@ -14,7 +14,7 @@ const app = express()
 // Intialize middleware
 app.use(express.json())
 app.use(cors({
-  origin: '*' // or '*' to allow all origins
+  origin: 'https://ndayurveda.vercel.app' // or '*' to allow all origins
 }));
 
 // Connect Database

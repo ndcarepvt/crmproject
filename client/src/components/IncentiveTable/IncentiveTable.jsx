@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { CRMContext } from "../../context/crmContext";
 import axios from "axios";
 import { FaEdit } from "react-icons/fa";
@@ -6,6 +6,8 @@ import { FaEdit } from "react-icons/fa";
 const IncentiveTable = ({ setIncentiveFormShow, setIncentiveFormData }) => {
 
   const { incentives, setIncentives, token, userData, URL } = useContext(CRMContext)
+  const [allIncentives, setAllIncentives] = useState([])
+
 
   const onEditHandler = (item) => {
     setIncentiveFormShow(true)
@@ -18,6 +20,7 @@ const IncentiveTable = ({ setIncentiveFormShow, setIncentiveFormData }) => {
     try {
       const response = await axios.get(`${URL}/api/incentive/getall`); // Update with your backend URL
       setIncentives(response.data.data);
+      setAllIncentives(response.data.data)
       console.log(response.data.data);
 
     } catch (err) {
@@ -40,6 +43,7 @@ const IncentiveTable = ({ setIncentiveFormShow, setIncentiveFormData }) => {
       // Axios GET request with query string
       const response = await axios.get(`${URL}/api/incentive/getfilter`, { headers: { token } }); // Adjust the URL as needed
       setIncentives(response.data.data);
+      setAllIncentives(response.data.data)
       console.log(response.data.data);
 
 
@@ -49,21 +53,67 @@ const IncentiveTable = ({ setIncentiveFormShow, setIncentiveFormData }) => {
     }
   };
 
-  useEffect(() => {
 
+  const fetchIncentive = () => {
     if (userData.role === 'accounts') {
       fetchIncentives()
     } else if (userData.role === 'sales') {
       fetchFilteredIncentives()
     }
+  }
+
+
+  useEffect(() => {
+
+
+    fetchIncentive()
+
 
   }, [token])
+
+
+  const onCoordinateHandler = (e) => {
+    const coordinateValue = e.target.value
+    console.log(coordinateValue)
+
+    if (coordinateValue !== "") {
+      const selectedIncentives = incentives.filter((item) => {
+        return item.name == coordinateValue
+      })
+      setAllIncentives(selectedIncentives)
+    } else {
+
+
+      setAllIncentives(incentives)
+
+    }
+  }
+
+
+  const onSearchHandler = (e) => {
+    const searchValue = e.target.value;
+    console.log(searchValue);
+
+    // If search value is empty, show all incentives
+    if (searchValue === "") {
+      setAllIncentives(incentives);
+    } else {
+      // Filter incentives based on the invoiceId (ensure invoiceId is a string)
+      const filterIncentive = incentives.filter((item) => {
+        const invoiceId = String(item.invoiceId); // Convert to string
+        return invoiceId.includes(searchValue);
+      });
+      setAllIncentives(filterIncentive);
+    }
+  };
+
+
 
 
 
   return (
     <div className="p-4 bg-gray-200 rounded-lg ">
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex flex-col sm:flex-row gap-2 justify-between items-center mb-4">
         <h2 className="text-2xl font-semibold">Incentive</h2>
         {userData.role === "sales" ? (
           <button
@@ -73,13 +123,32 @@ const IncentiveTable = ({ setIncentiveFormShow, setIncentiveFormData }) => {
             + Add Incentive
           </button>
         ) : null}
-        {userData.role === "account" ? (
-          <select
-            className="bg-gray-900 text-white px-2 py-1 md:px-4 md:py-2 rounded-md"
-          >
-            -- Select Coordinator --
-          </select>
+
+        {userData.role === "accounts" ? (
+          <input type="text" placeholder="Enter by invoiceid" onChange={(e) => onSearchHandler(e)} className="w-[200px] px-2 py-1 border rounded-md focus:ring-2 focus:ring-black focus:outline-none " />
         ) : null}
+
+
+        <div className="flex gap-3 sm:flex-row flex-col">
+          {userData.role === "accounts" ? (
+            <select
+              className="bg-gray-900 text-white px-2 py-1 md:px-4 md:py-2 rounded-md"
+              onChange={(e) => onCoordinateHandler(e)}
+            >
+              <option value="">-- Select Coordinator --</option>
+              <option value="rajat">rajat</option>
+              <option value="arsh">arsh</option>
+
+            </select>
+          ) : null}
+
+          <button onClick={fetchIncentive} className="bg-gray-900 w-[100px] text-white px-2 py-1 md:px-4 md:py-2 rounded-md" >refresh</button>
+        </div>
+
+
+      </div>
+      <div className="my-2 text-left md:text-right">
+
       </div>
       <div className="overflow-x-scroll">
         <table className="min-w-full border-collapse bg-white shadow-md rounded-lg">
@@ -110,7 +179,7 @@ const IncentiveTable = ({ setIncentiveFormShow, setIncentiveFormData }) => {
             </tr>
           </thead>
           <tbody>
-            {incentives.map((product, index) => (
+            {allIncentives.map((product, index) => (
               <tr
                 key={index}
                 className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
@@ -131,8 +200,8 @@ const IncentiveTable = ({ setIncentiveFormShow, setIncentiveFormData }) => {
                     : product.status === "pending"
                       ? "text-yellow-600"
                       : product.status === "rejected"
-                      ? "text-red-600"
-                      : ""
+                        ? "text-red-600"
+                        : ""
                     }`}
                 >
                   {product.status}
