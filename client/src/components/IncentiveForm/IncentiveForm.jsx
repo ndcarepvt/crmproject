@@ -145,7 +145,7 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
         navigate('/dashboard');
         console.log("Response:", response.data);
       } else {
-        toast.success(response.data.message)
+        toast.error(response.data.message)
         setIncentiveFormShow(false)
         setLoading(false)
       }
