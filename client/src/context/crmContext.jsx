@@ -31,7 +31,7 @@ const CRMContextProvider = (props) => {
 
     const fetchUserData = useCallback(async (token) => {
         try {
-            const response = await axios.post("/api/user/getuserdetails", {}, { headers: { token } });
+            const response = await axios.post(URL + "/api/user/getuserdetails", {}, { headers: { token } });
             if (response.data.success) {
                 setUserData(response.data.userData);
                 console.log(response.data.userData);

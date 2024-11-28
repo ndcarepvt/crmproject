@@ -16,7 +16,7 @@ const app = express()
 app.use(express.json())
 app.use(cors({
   origin: process.env.CLIENT_URL, // or '*' to allow all origins
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  methods: ["GET","HEAD","PUT","PATCH","POST","DELETE"],
   credentials: true, // If your frontend is sending cookies or authentication headers
   optionsSuccessStatus: 204 // For legacy browser support
 }));
