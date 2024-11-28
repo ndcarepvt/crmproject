@@ -2,11 +2,13 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import { CRMContext } from "../../context/crmContext";
 import axios from "axios";
 import { FaEdit } from "react-icons/fa";
+import { IncentiveContext } from "../../context/incentiveContext";
 
 const IncentiveTable = ({ setIncentiveFormShow, setIncentiveFormData }) => {
 
   const { incentives, setIncentives, token, userData, URL } = useContext(CRMContext)
-  const [allIncentives, setAllIncentives] = useState([])
+  const { fetchIncentive, allIncentives, setAllIncentives } = useContext(IncentiveContext)
+  
 
 
   const onEditHandler = (item) => {
@@ -14,53 +16,6 @@ const IncentiveTable = ({ setIncentiveFormShow, setIncentiveFormData }) => {
     setIncentiveFormData(item)
   }
 
-
-  // Fetch all incentives (GET data)
-  const fetchIncentives = async () => {
-    try {
-      const response = await axios.get(`${URL}/api/incentive/getall`); // Update with your backend URL
-      setIncentives(response.data.data);
-      setAllIncentives(response.data.data)
-      console.log(response.data.data);
-
-    } catch (err) {
-
-      console.error('Error:', err);
-    }
-  };
-
-  const fetchFilteredIncentives = async () => {
-    try {
-
-      // Construct the query string
-
-      const query = { name: userData.name, role: userData.role }
-      console.log("run");
-      console.log(query);
-
-      const userId = userData.userId
-
-      // Axios GET request with query string
-      const response = await axios.get(`${URL}/api/incentive/getfilter`, { headers: { token } }); // Adjust the URL as needed
-      setIncentives(response.data.data);
-      setAllIncentives(response.data.data)
-      console.log(response.data.data);
-
-
-    } catch (err) {
-
-      console.error('Error:', err);
-    }
-  };
-
-
-  const fetchIncentive = () => {
-    if (userData.role === 'accounts') {
-      fetchIncentives()
-    } else if (userData.role === 'sales') {
-      fetchFilteredIncentives()
-    }
-  }
 
 
   useEffect(() => {

@@ -100,7 +100,7 @@ const Login = () => {
                         type="submit"
                         className="w-full bg-msu-green text-white font-semibold p-3 rounded hover:bg-oxley transition"
                     >
-                        Submit
+                        Login
                     </button>
                 </form>
             </div>

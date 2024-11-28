@@ -17,26 +17,26 @@ const SecureRoute = ({ children }) => {
 
 // Render the app with CRMContextProvider and BrowserRouter
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <BrowserRouter>
-      <CRMContextProvider>
-        <Routes>
-          <Route path="/" element={<App />}>
-            <Route index element={<Login />} />
-            <Route path="dashboard" element={
-                <SecureRoute>
-                  <Dashboard />
-                </SecureRoute>
-              } />
-            <Route path="invoice" element={
-                <SecureRoute>
-                  <Invoice />
-                </SecureRoute>
-              } />
 
-          </Route>
-        </Routes>
-      </CRMContextProvider>
-    </BrowserRouter>
-  </StrictMode>
+  <BrowserRouter>
+    <CRMContextProvider>
+      <Routes>
+        <Route path="/" element={<App />}>
+          <Route index element={<Login />} />
+          <Route path="dashboard" element={
+            <SecureRoute>
+              <Dashboard />
+            </SecureRoute>
+          } />
+          <Route path="invoice" element={
+            <SecureRoute>
+              <Invoice />
+            </SecureRoute>
+          } />
+
+        </Route>
+      </Routes>
+    </CRMContextProvider>
+  </BrowserRouter>
+
 );

@@ -3,9 +3,11 @@ import { CRMContext } from "../../context/crmContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { IncentiveContext } from "../../context/incentiveContext";
 
 const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
-  const { userData, setIncentives, URL, token } = useContext(CRMContext); // Get user data from context
+  const { userData, setIncentives, URL, token, setLoading } = useContext(CRMContext); // Get user data from context
+  const { fetchIncentive } = useContext(IncentiveContext); // Get user data from context
   const { role } = userData; // Assume `role` contains the current user's role
   const isSalesperson = role === "sales";
   const navigate = useNavigate()
@@ -56,6 +58,7 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true)
       await getInvoiceData(formData.invoiceId);
       console.log(formData);
     } catch (err) {
@@ -134,6 +137,8 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
       if (response.data.success) {
         toast.success(response.data.message)
         setIncentiveFormShow(false)
+        setLoading(false)
+        fetchIncentive()
         navigate('/dashboard');
         console.log("Response:", response.data);
       }
@@ -154,6 +159,7 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
       console.error("formData is undefined or null.");
       return;
     }
+    setLoading(true)
 
     // Extract values with fallback to avoid runtime errors
     const commissionRate = formData.commission
@@ -181,6 +187,8 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
         if (response.data.success) {
           toast.success(response.data.message)
           setIncentiveFormShow(false)
+          setLoading(false)
+          fetchIncentive()
         }
 
         console.log("Response:", response.data);
@@ -296,10 +304,8 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
                 onChange={handleInputChange}
                 className="w-full mt-1 p-2 border rounded-md focus:ring-2 focus:ring-black focus:outline-none"
               >
-                <option value="pending">Pending</option>
                 <option value="approved">Approved</option>
                 <option value="rejected">Rejected</option>
-                <option value="doubling">Doubling</option>
               </select>
             </div>
           )}
