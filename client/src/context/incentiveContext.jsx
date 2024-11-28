@@ -1,5 +1,7 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, useState } from "react";
 import { CRMContext } from "./crmContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 export const IncentiveContext = createContext(null)
 
@@ -13,7 +15,7 @@ const IncentiveContextProvider = (props) => {
     try {
       const response = await axios.get(`${URL}/api/incentive/getall`); // Update with your backend URL
       setIncentives(response.data.data);
-      setAllIncentives(response.data.data)
+      setAllIncentives(response.data.data);
       console.log(response.data.data);
 
     } catch (err) {
@@ -31,10 +33,10 @@ const IncentiveContextProvider = (props) => {
             setAllIncentives(response.data.data)
             console.log(response.data.data);
 
-
         } catch (err) {
 
             console.error('Error:', err);
+            toast.error(err.message)
         }
     };
 
