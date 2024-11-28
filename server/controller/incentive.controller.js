@@ -8,7 +8,6 @@ export const addIncentive = async (req, res) => {
     console.log("run", name, role, invoiceId, commission,billAmount, userId);
   
     // Validate required fields
-    console.log(invoiceCurrency);
     
     if (!name || !role || !invoiceId || !commission || !billAmount ) {
       return res.status(400).json({ success:false, message: 'All fields are required' });
@@ -30,10 +29,8 @@ export const addIncentive = async (req, res) => {
       return readableDate;
     };
 
-    console.log(createdDate);
     
     const getReadableDate = (refineDate) => {
-      console.log(refineDate);
       
       const date = new Date(refineDate);
       const readableDate = date.toLocaleDateString("en-GB", {
@@ -41,7 +38,6 @@ export const addIncentive = async (req, res) => {
         month: '2-digit',
         year: 'numeric'
       });
-      console.log(readableDate);
       
       return readableDate;
     };
@@ -93,7 +89,6 @@ export const getIncentivesByNameAndRole = async (req, res) => {
     
     const incentives = await Incentive.find({userId});
 
-    console.log(incentives);
     
 
     res.status(200).json({success:true, message: 'Filtered incentives retrieved successfully', data: incentives });
@@ -106,7 +101,6 @@ export const getIncentivesByNameAndRole = async (req, res) => {
 export const updateIncentive = async (req, res) => {
   const {receivedAmount, commissionAmount, invoiceId, status} = req.body;
   console.log("run");
-  console.log(receivedAmount);
   
   try {
 
@@ -115,9 +109,6 @@ export const updateIncentive = async (req, res) => {
     incentive.status = status;
     incentive.receivedAmount = receivedAmount;
     incentive.commissionAmount = commissionAmount;
-
-    console.log(incentive);
-    
 
     await incentive.save();
 
