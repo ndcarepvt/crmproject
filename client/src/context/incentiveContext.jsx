@@ -13,7 +13,7 @@ const IncentiveContextProvider = (props) => {
     // Fetch all incentives (GET data)
   const fetchIncentives = async () => {
     try {
-      const response = await axios.get(`${URL}/api/incentive/getall`); // Update with your backend URL
+      const response = await axios.get(`/api/incentive/getall`); // Update with your backend URL
       setIncentives(response.data.data);
       setAllIncentives(response.data.data);
       console.log(response.data.data);
@@ -28,7 +28,7 @@ const IncentiveContextProvider = (props) => {
         try {
 
             // Axios GET request with query string
-            const response = await axios.get(`${URL}/api/incentive/getfilter`, { headers: { token } }); // Adjust the URL as needed
+            const response = await axios.get(`/api/incentive/getfilter`, { headers: { token } }); // Adjust the URL as needed
             setIncentives(response.data.data);
             setAllIncentives(response.data.data)
             console.log(response.data.data);

@@ -132,7 +132,7 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
 
   const postData = async () => {
     try {
-      const response = await axios.post(`${URL}/api/incentive/add`, formData, { headers: { token } });
+      const response = await axios.post(`/api/incentive/add`, formData, { headers: { token } });
 
       if (response.data.success) {
         toast.success(response.data.message)
@@ -182,7 +182,7 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
    
       try {
 
-        const response = await axios.post(`${URL}/api/incentive/update`, formData);
+        const response = await axios.post(`/api/incentive/update`, formData);
 
         if (response.data.success) {
           toast.success(response.data.message)
