@@ -117,8 +117,8 @@ const IncentiveTable = ({ setIncentiveFormShow, setIncentiveFormData }) => {
                   <th className="p-4 text-center font-semibold">Invoice Currency</th>
                 )
               }
-              <th className="p-4 text-center font-semibold">Received Amount</th>
-              <th className="p-4 text-center font-semibold">Commission  Amount</th>
+              <th className="p-4 text-center font-semibold">Received Amount (INR)</th>
+              <th className="p-4 text-center font-semibold">Commission  Amount (INR)</th>
               <th className="p-4 text-center font-semibold">Status</th>
               <th className="p-4 text-center font-semibold">Date</th>
               {
