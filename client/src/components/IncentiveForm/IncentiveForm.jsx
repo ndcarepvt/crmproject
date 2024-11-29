@@ -164,13 +164,6 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
     const commissionAmount = (actualRecievedAmount * commissionRate) / 100;
 
 
-    console.log("Received Amount:", receivedAmount);
-    console.log("Commission Rate (%):", commissionRate);
-    console.log("Commission Amount:", commissionAmount);
-    console.log("Bank Charge Rate (%):", bankChargeRate);
-    console.log("Bank Charge:", bankCharge);
-    console.log("Support Charge (fixed):", supportCharge);
-
     return commissionAmount;
   }
 
