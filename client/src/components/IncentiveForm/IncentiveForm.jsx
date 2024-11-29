@@ -191,8 +191,8 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
     const receivedAmount = formData.receivedAmount
     const bankCharges = formData.bankCharges
     const supportCharges = formData.supportCharges
-    const packingCharges = formData.packingCharges
-    const courierCharge = formData.courierCharge
+    let packingCharges = formData.packingCharges
+    let courierCharge = formData.courierCharge
 
     if (formData.invoiceCurrency === "USD") {
       packingCharges = 400
