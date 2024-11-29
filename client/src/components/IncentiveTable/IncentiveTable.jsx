@@ -3,13 +3,15 @@ import { CRMContext } from "../../context/crmContext";
 import axios from "axios";
 import { FaEdit } from "react-icons/fa";
 import { IncentiveContext } from "../../context/incentiveContext";
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
 
 const IncentiveTable = ({ setIncentiveFormShow, setIncentiveFormData }) => {
 
   const { incentives, setIncentives, token, userData, URL } = useContext(CRMContext)
   const { fetchIncentive, allIncentives, setAllIncentives } = useContext(IncentiveContext)
-  
-
+  const [startDateValue, setStartDateValue] = useState()
+  const [endDateValue, setEndDateValue] = useState()
 
   const onEditHandler = (item) => {
     setIncentiveFormShow(true)
@@ -17,11 +19,8 @@ const IncentiveTable = ({ setIncentiveFormShow, setIncentiveFormData }) => {
   }
 
 
-
   useEffect(() => {
-
     fetchIncentive()
-
   }, [token])
 
 
@@ -35,8 +34,6 @@ const IncentiveTable = ({ setIncentiveFormShow, setIncentiveFormData }) => {
       })
       setAllIncentives(selectedIncentives)
     } else {
-
-
       setAllIncentives(incentives)
 
     }
@@ -54,13 +51,40 @@ const IncentiveTable = ({ setIncentiveFormShow, setIncentiveFormData }) => {
       // Filter incentives based on the invoiceId (ensure invoiceId is a string)
       const filterIncentive = incentives.filter((item) => {
         const invoiceId = String(item.invoiceId); // Convert to string
-        return invoiceId.includes(searchValue);
+        const patientId = String(item.patientId)
+        const username = String(item.name)
+
+        if (invoiceId.includes(searchValue)) {
+          return invoiceId.includes(searchValue);
+        } else if (patientId.includes(searchValue)) {
+          return patientId.includes(searchValue);
+        } else if (username.includes(searchValue)) {
+          return username.includes(searchValue);
+        }
+
+
       });
       setAllIncentives(filterIncentive);
     }
   };
 
 
+  const filterIncentives = () => {
+    if (!startDateValue || !endDateValue) return;
+
+    const filtered = incentives.filter((incentive) => {
+      const incentiveDate = new Date(incentive.date);
+      console.log(incentiveDate)
+      console.log(startDateValue)
+      console.log(endDateValue)
+      return (
+        incentiveDate >= new Date(startDateValue) &&
+        incentiveDate <= new Date(endDateValue)
+      );
+    });
+
+    setAllIncentives(filtered);
+  };
 
 
 
@@ -100,15 +124,44 @@ const IncentiveTable = ({ setIncentiveFormShow, setIncentiveFormData }) => {
 
 
       </div>
-      <div className="my-2 text-left md:text-right">
 
-      </div>
+      {
+        userData.role === "accounts" ? <>
+          <div className="my-2 space-x-2 flex">
+            <input
+              type="date"
+              value={startDateValue}
+              onChange={(e) => setStartDateValue(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700"
+            />
+            <input
+              type="date"
+              value={endDateValue}
+              onChange={(e) => setEndDateValue(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700"
+            />
+
+
+            {/* {console.log(startDateValue, endDateValue)} */}
+
+            <button
+              className="bg-gray-900 text-white px-2 py-1 md:px-4 md:py-2 rounded-md"
+              onClick={filterIncentives}
+            >
+              Search
+            </button>
+
+          </div>
+        </> : <></>
+      }
+
       <div className="overflow-x-scroll">
         <table className="min-w-full border-collapse bg-white shadow-md rounded-lg">
           <thead>
             <tr className="bg-gray-100">
               <th className="p-4 text-center font-semibold">No</th>
               <th className="p-4 text-center font-semibold">User Name</th>
+              <th className="p-4 text-center font-semibold">Patient Id</th>
               <th className="p-4 text-center font-semibold">Invoice Id</th>
               <th className="p-4 text-center font-semibold">Commission</th>
               <th className="p-4 text-center font-semibold">Bill Amount</th>
@@ -120,7 +173,28 @@ const IncentiveTable = ({ setIncentiveFormShow, setIncentiveFormData }) => {
               <th className="p-4 text-center font-semibold">Received Amount (INR)</th>
               <th className="p-4 text-center font-semibold">Commission  Amount (INR)</th>
               <th className="p-4 text-center font-semibold">Status</th>
+              {
+                userData.role === "accounts" && (
+                  <th className="p-4 text-center font-semibold">Packing Charges</th>
+                )
+              }
+              {
+                userData.role === "accounts" && (
+                  <th className="p-4 text-center font-semibold">Bank Charges</th>
+                )
+              }
+              {
+                userData.role === "accounts" && (
+                  <th className="p-4 text-center font-semibold">Courier Charges</th>
+                )
+              }
+              {
+                userData.role === "accounts" && (
+                  <th className="p-4 text-center font-semibold">Support Charges</th>
+                )
+              }
               <th className="p-4 text-center font-semibold">Date</th>
+
               {
                 userData.role === "accounts" && (
                   <th className="p-4 text-center font-semibold">Created Date</th>
@@ -139,6 +213,7 @@ const IncentiveTable = ({ setIncentiveFormShow, setIncentiveFormData }) => {
               >
                 <td className="p-4 text-center">{index + 1}</td>
                 <td className="p-4 text-center">{product.name}</td>
+                <td className="p-4 text-center">{product.patientId}</td>
                 <td className="p-4 text-center">{product.invoiceId}</td>
                 <td className="p-4 text-center">{product.commission}</td>
                 <td className="p-4 text-center">{product.billAmount}</td>
@@ -159,6 +234,26 @@ const IncentiveTable = ({ setIncentiveFormShow, setIncentiveFormData }) => {
                 >
                   {product.status}
                 </td>
+                {
+                  userData.role === "accounts" && (
+                    <td className="p-4 text-center">{product.packingCharges}</td>
+                  )
+                }
+                {
+                  userData.role === "accounts" && (
+                    <td className="p-4 text-center">{product.bankCharges}</td>
+                  )
+                }
+                {
+                  userData.role === "accounts" && (
+                    <td className="p-4 text-center">{product.courierCharge}</td>
+                  )
+                }
+                {
+                  userData.role === "accounts" && (
+                    <td className="p-4 text-center">{product.supportCharges}</td>
+                  )
+                }
                 <td className="p-4 text-center">{product.date}</td>
                 {
                   userData.role === "accounts" ? <td className="p-4 text-center">{product.createdDate}</td> : <></>

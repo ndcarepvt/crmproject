@@ -17,10 +17,14 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
     role: '',
     userId: '',
     invoiceId: '',
+    patientId:'',
     commission: '',
     createdDate: '',
     billAmount: '',
+    courierCharge:0,
+    packingCharges:0,
     receivedAmount: 0,
+    supportCharges:0,
     commissionAmount: '',
     invoiceCurrency: "",
     status: userData.role ? 'pending' : '',
@@ -73,7 +77,9 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
       let currency = response.data[0].pbill.currency;
       console.log(response.data);
       formData.invoiceCurrency = currency;
+      formData.patientId = response.data[0].pbill.enq_code;
       formData.createdDate = response.data[0].pbill.createddate;
+      formData.courierCharge = Number(response.data[0].pbill.courier);
       handleTotalAmount(response.data, currency);
     } catch (error) {
       console.error("Error fetching invoice:", error);
@@ -93,8 +99,9 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
       postData();
     }, 2000);
   };
+  
+  
   // handlerCurrencyFetcher(totalAmount, currency);
-
   // const handlerCurrencyFetcher = async (amount, currency) => {
   //   const options = {
   //     method: "GET",
@@ -117,26 +124,37 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
   //   }
   // };
 
+
   // Function to calculate commission
-  function calculateCommission(receivedAmount, commissionRate) {
+  function calculateCommission(receivedAmount, commissionRate, bankChargeRate, supportCharge) {
+    
+    // Calculate bank charges as a percentage
+    const bankCharge = (receivedAmount * bankChargeRate) / 100;
+
+    // calculate recievedpayment without charges
+    const actualRecievedAmount = receivedAmount - bankCharge - supportCharge;
 
     // Calculate commission
-    console.log(receivedAmount, commissionRate);
-
-    const commissionAmount = (receivedAmount * commissionRate) / 100;
-    console.log(commissionAmount);
-
+    const commissionAmount = (actualRecievedAmount * commissionRate) / 100;
+  
+  
+    console.log("Received Amount:", receivedAmount);
+    console.log("Commission Rate (%):", commissionRate);
+    console.log("Commission Amount:", commissionAmount);
+    console.log("Bank Charge Rate (%):", bankChargeRate);
+    console.log("Bank Charge:", bankCharge);
+    console.log("Support Charge (fixed):", supportCharge);
+  
     return commissionAmount;
   }
 
-
+  
   const postData = async () => {
     try {
       console.log("run", formData);
       
       const response = await axios.post(`${URL}/api/incentive/add`, formData, { headers: { token } });
       console.log(response);
-      
       if (response.data.success) {
         toast.success(response.data.message)
         setIncentiveFormShow(false)
@@ -167,10 +185,13 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
       return;
     }
     setLoading(true)
+    
 
     // Extract values with fallback to avoid runtime errors
     const commissionRate = formData.commission
     const receivedAmount = formData.receivedAmount
+    const bankCharges = formData.bankCharges
+    const supportCharges = formData.supportCharges
 
     // Ensure `calculateCommission` is defined
     if (typeof calculateCommission !== "function") {
@@ -179,10 +200,8 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
     }
 
     // Calculate commission and update formData immutably
-
-    const commissionAmount = calculateCommission(receivedAmount, commissionRate)
+    const commissionAmount = calculateCommission(receivedAmount, commissionRate, bankCharges, supportCharges)
     console.log(commissionAmount);
-
 
     formData.commissionAmount = commissionAmount
 
@@ -314,6 +333,7 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
                 onChange={handleInputChange}
                 className="w-full mt-1 p-2 border rounded-md focus:ring-2 focus:ring-black focus:outline-none"
               >
+                <option value="">-- Select Status --</option>
                 <option value="approved">Approved</option>
                 <option value="rejected">Rejected</option>
               </select>
@@ -334,8 +354,49 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
                 id="receivedAmount"
                 placeholder="Enter Received"
                 className="w-full mt-1 p-2 border rounded-md focus:ring-2 focus:ring-black focus:outline-none"
-                value={formData.receivedAmount}
+                value={formData.receivedAmount === 0 ? "" : formData.receivedAmount }
                 onChange={(e) => setFormData((prev) => ({ ...prev, receivedAmount: Number(e.target.value), }))} // Add this to handle updates
+              />
+            </div>
+          )}
+
+
+          {isAdminOrAccount && (
+            <div>
+              <label
+                htmlFor="bankCharges"
+                className="block text-sm font-medium"
+              >
+                Bank Charges
+              </label>
+              <input
+                type="text"
+                name="bankCharges"
+                id="bankCharges"
+                placeholder="Enter Bank Charges"
+                className="w-full mt-1 p-2 border rounded-md focus:ring-2 focus:ring-black focus:outline-none"
+                value={formData.bankCharges === 0 ? "" : formData.bankCharges }
+                onChange={(e) => setFormData((prev) => ({ ...prev, bankCharges: Number(e.target.value), }))} // Add this to handle updates
+              />
+            </div>
+          )}
+
+          {isAdminOrAccount && (
+            <div>
+              <label
+                htmlFor="supportCharges"
+                className="block text-sm font-medium"
+              >
+                Support Charges
+              </label>
+              <input
+                type="text"
+                name="supportCharges"
+                id="supportCharges"
+                placeholder="Enter Support Charges"
+                className="w-full mt-1 p-2 border rounded-md focus:ring-2 focus:ring-black focus:outline-none"
+                value={formData.supportCharges === 0 ? "" : formData.supportCharges }
+                onChange={(e) => setFormData((prev) => ({ ...prev, supportCharges: Number(e.target.value), }))} // Add this to handle updates
               />
             </div>
           )}

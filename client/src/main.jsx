@@ -9,6 +9,8 @@ import Invoice from './pages/Invoice/Invoice.jsx';
 import CRMContextProvider, { CRMContext } from './context/crmContext.jsx';
 import Login from './pages/Login/Login.jsx';
 import IncentiveContextProvider from './context/incentiveContext.jsx';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 // SecureRoute Component
 const SecureRoute = ({ children }) => {
@@ -19,27 +21,29 @@ const SecureRoute = ({ children }) => {
 // Render the app with CRMContextProvider and BrowserRouter
 createRoot(document.getElementById('root')).render(
 
-  <BrowserRouter>
-    <CRMContextProvider>
-      <IncentiveContextProvider>
-        <Routes>
-          <Route path="/" element={<App />}>
-            <Route index element={<Login />} />
-            <Route path="dashboard" element={
-              <SecureRoute>
-                <Dashboard />
-              </SecureRoute>
-            } />
-            <Route path="invoice" element={
-              <SecureRoute>
-                <Invoice />
-              </SecureRoute>
-            } />
+  <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <BrowserRouter>
+      <CRMContextProvider>
+        <IncentiveContextProvider>
+          <Routes>
+            <Route path="/" element={<App />}>
+              <Route index element={<Login />} />
+              <Route path="dashboard" element={
+                <SecureRoute>
+                  <Dashboard />
+                </SecureRoute>
+              } />
+              <Route path="invoice" element={
+                <SecureRoute>
+                  <Invoice />
+                </SecureRoute>
+              } />
 
-          </Route>
-        </Routes>
-      </IncentiveContextProvider>
-    </CRMContextProvider>
-  </BrowserRouter>
+            </Route>
+          </Routes>
+        </IncentiveContextProvider>
+      </CRMContextProvider>
+    </BrowserRouter>
+  </ LocalizationProvider>
 
 );

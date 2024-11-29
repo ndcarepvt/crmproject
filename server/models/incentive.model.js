@@ -11,11 +11,15 @@ const incentiveSchema = new mongoose.Schema({
   },
   userId:{
     type:String,
-    required:true
+    required: true
   },
   invoiceId: {
     type: Number,
     required: true
+  },
+  patientId:{
+    type:Number,
+    required:true
   },
   invoiceCurrency:{
     type:String,
@@ -47,6 +51,22 @@ const incentiveSchema = new mongoose.Schema({
   InvoiceDate: {
     type: String,
     // required: true,
+  },
+  courierCharge:{
+    type:Number,
+    default:null
+  },
+  bankCharges:{
+    type:Number,
+    default:null
+  },
+  packingCharges:{
+    type:Number,
+    default:null
+  },
+  supportCharges:{
+    type:Number,
+    default:null
   },
   date: {
     type: String,
