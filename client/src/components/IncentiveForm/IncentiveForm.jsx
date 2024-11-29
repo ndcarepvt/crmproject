@@ -189,13 +189,17 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
 
     if (formData.invoiceCurrency === "USD") {
       packingCharges = 400
+      formData.packingCharges = 400
     } else if (formData.invoiceCurrency === "INR") {
       packingCharges = 200
+      formData.packingCharges = 200
     }
     if (formData.invoiceCurrency === "USD") {
       courierCharge = 5000
+      formData.courierCharge = 5000
     } else if (formData.invoiceCurrency === "INR") {
       courierCharge = 500
+      formData.courierCharge = 500
     }
 
     // Ensure `calculateCommission` is defined
