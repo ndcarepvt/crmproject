@@ -4,7 +4,7 @@ import { Incentive } from "../models/incentive.model.js";
 // Add a new incentive
 export const addIncentive = async (req, res) => {
   try {
-    const { name, role, invoiceId, commission, billAmount, userId, invoiceCurrency, createdDate, patientId, courierCharge } = req.body;
+    const { name, role, invoiceId, commission, billAmount, userId, invoiceCurrency, createdDate, patientId, courierCharge, packingCharges, } = req.body;
     console.log("run", name, role, invoiceId, commission, billAmount, userId, courierCharge);
 
     // Validate required fields
@@ -42,15 +42,7 @@ export const addIncentive = async (req, res) => {
     const readableCreatedDate = getReadableDate(createdDate)
     const readableDate = getDate()
 
-    let packingCharges = 0
-
-    if (invoiceCurrency === "USD") {
-      packingCharges = 400
-    } else if (invoiceCurrency === "INR") {
-      packingCharges = 200
-    }
-
-    
+ 
 
     // Create a new incentive
     const incentive = new Incentive({

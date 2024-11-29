@@ -17,14 +17,14 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
     role: '',
     userId: '',
     invoiceId: '',
-    patientId:'',
+    patientId: '',
     commission: '',
     createdDate: '',
     billAmount: '',
-    courierCharge:0,
-    packingCharges:0,
+    courierCharge: 0,
+    packingCharges: 0,
     receivedAmount: 0,
-    supportCharges:0,
+    supportCharges: 0,
     commissionAmount: '',
     invoiceCurrency: "",
     status: userData.role ? 'pending' : '',
@@ -79,7 +79,6 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
       formData.invoiceCurrency = currency;
       formData.patientId = response.data[0].pbill.enq_code;
       formData.createdDate = response.data[0].pbill.createddate;
-      formData.courierCharge = Number(response.data[0].pbill.courier);
       handleTotalAmount(response.data, currency);
     } catch (error) {
       console.error("Error fetching invoice:", error);
@@ -99,8 +98,8 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
       postData();
     }, 2000);
   };
-  
-  
+
+
   // handlerCurrencyFetcher(totalAmount, currency);
   // const handlerCurrencyFetcher = async (amount, currency) => {
   //   const options = {
@@ -125,34 +124,10 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
   // };
 
 
-  // Function to calculate commission
-  function calculateCommission(receivedAmount, commissionRate, bankChargeRate, supportCharge) {
-    
-    // Calculate bank charges as a percentage
-    const bankCharge = (receivedAmount * bankChargeRate) / 100;
-
-    // calculate recievedpayment without charges
-    const actualRecievedAmount = receivedAmount - bankCharge - supportCharge;
-
-    // Calculate commission
-    const commissionAmount = (actualRecievedAmount * commissionRate) / 100;
-  
-  
-    console.log("Received Amount:", receivedAmount);
-    console.log("Commission Rate (%):", commissionRate);
-    console.log("Commission Amount:", commissionAmount);
-    console.log("Bank Charge Rate (%):", bankChargeRate);
-    console.log("Bank Charge:", bankCharge);
-    console.log("Support Charge (fixed):", supportCharge);
-  
-    return commissionAmount;
-  }
-
-  
   const postData = async () => {
     try {
       console.log("run", formData);
-      
+
       const response = await axios.post(`${URL}/api/incentive/add`, formData, { headers: { token } });
       console.log(response);
       if (response.data.success) {
@@ -176,6 +151,30 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
   };
 
 
+  // Function to calculate commission
+  function calculateCommission(receivedAmount, commissionRate, bankCharges, supportCharges, packingCharges, courierCharge) {
+
+    // Calculate bank charges as a percentage
+    const bankCharge = (receivedAmount * bankCharges) / 100;
+
+    // calculate recievedpayment without charges
+    const actualRecievedAmount = receivedAmount - bankCharge - supportCharges - packingCharges - courierCharge;
+
+    // Calculate commission
+    const commissionAmount = (actualRecievedAmount * commissionRate) / 100;
+
+
+    console.log("Received Amount:", receivedAmount);
+    console.log("Commission Rate (%):", commissionRate);
+    console.log("Commission Amount:", commissionAmount);
+    console.log("Bank Charge Rate (%):", bankChargeRate);
+    console.log("Bank Charge:", bankCharge);
+    console.log("Support Charge (fixed):", supportCharge);
+
+    return commissionAmount;
+  }
+
+
   const onUpdateHandler = async (e) => {
     e.preventDefault();
 
@@ -185,13 +184,26 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
       return;
     }
     setLoading(true)
-    
+
 
     // Extract values with fallback to avoid runtime errors
     const commissionRate = formData.commission
     const receivedAmount = formData.receivedAmount
     const bankCharges = formData.bankCharges
     const supportCharges = formData.supportCharges
+    const packingCharges = formData.packingCharges
+    const courierCharge = formData.courierCharge
+
+    if (formData.invoiceCurrency === "USD") {
+      packingCharges = 400
+    } else if (formData.invoiceCurrency === "INR") {
+      packingCharges = 200
+    }
+    if (formData.invoiceCurrency === "USD") {
+      courierCharge = 5000
+    } else if (formData.invoiceCurrency === "INR") {
+      courierCharge = 500
+    }
 
     // Ensure `calculateCommission` is defined
     if (typeof calculateCommission !== "function") {
@@ -200,32 +212,32 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
     }
 
     // Calculate commission and update formData immutably
-    const commissionAmount = calculateCommission(receivedAmount, commissionRate, bankCharges, supportCharges)
+    const commissionAmount = calculateCommission(receivedAmount, commissionRate, bankCharges, supportCharges, packingCharges, courierCharge)
     console.log(commissionAmount);
 
     formData.commissionAmount = commissionAmount
 
-   
-      try {
 
-        const response = await axios.post(`${URL}/api/incentive/update`, formData);
+    try {
 
-        if (response.data.success) {
-          toast.success(response.data.message)
-          setIncentiveFormShow(false)
-          setLoading(false)
-          fetchIncentive()
-        } else {
-          toast.error(response.data.message)
-          setLoading(false)
-        }
+      const response = await axios.post(`${URL}/api/incentive/update`, formData);
 
-        console.log("Response:", response.data);
-      } catch (err) {
-        console.error("Error:", err);
-        alert("Failed to update incentive. Please try again.");
+      if (response.data.success) {
+        toast.success(response.data.message)
+        setIncentiveFormShow(false)
+        setLoading(false)
+        fetchIncentive()
+      } else {
+        toast.error(response.data.message)
+        setLoading(false)
       }
-  
+
+      console.log("Response:", response.data);
+    } catch (err) {
+      console.error("Error:", err);
+      alert("Failed to update incentive. Please try again.");
+    }
+
   };
 
   return (
@@ -354,7 +366,7 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
                 id="receivedAmount"
                 placeholder="Enter Received"
                 className="w-full mt-1 p-2 border rounded-md focus:ring-2 focus:ring-black focus:outline-none"
-                value={formData.receivedAmount === 0 ? "" : formData.receivedAmount }
+                value={formData.receivedAmount === 0 ? "" : formData.receivedAmount}
                 onChange={(e) => setFormData((prev) => ({ ...prev, receivedAmount: Number(e.target.value), }))} // Add this to handle updates
               />
             </div>
@@ -375,7 +387,7 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
                 id="bankCharges"
                 placeholder="Enter Bank Charges"
                 className="w-full mt-1 p-2 border rounded-md focus:ring-2 focus:ring-black focus:outline-none"
-                value={formData.bankCharges === 0 ? "" : formData.bankCharges }
+                value={formData.bankCharges === 0 ? "" : formData.bankCharges}
                 onChange={(e) => setFormData((prev) => ({ ...prev, bankCharges: Number(e.target.value), }))} // Add this to handle updates
               />
             </div>
@@ -395,7 +407,7 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
                 id="supportCharges"
                 placeholder="Enter Support Charges"
                 className="w-full mt-1 p-2 border rounded-md focus:ring-2 focus:ring-black focus:outline-none"
-                value={formData.supportCharges === 0 ? "" : formData.supportCharges }
+                value={formData.supportCharges === 0 ? "" : formData.supportCharges}
                 onChange={(e) => setFormData((prev) => ({ ...prev, supportCharges: Number(e.target.value), }))} // Add this to handle updates
               />
             </div>
