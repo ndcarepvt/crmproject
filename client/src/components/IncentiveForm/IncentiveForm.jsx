@@ -293,6 +293,7 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
                   value={formData.name}
                   onChange={handleInputChange}
                   className="w-full mt-1 p-2 border rounded-md focus:ring-2 focus:ring-black focus:outline-none"
+                  readOnly={isAdminOrAccount}
                 />
               </div>
               <div>
@@ -310,6 +311,7 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
                   value={formData.commission}
                   onChange={handleInputChange}
                   className="w-full mt-1 p-2 border rounded-md focus:ring-2 focus:ring-black focus:outline-none"
+                  readOnly={isAdminOrAccount}
                 />
               </div>
               <div>
@@ -327,6 +329,7 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
                   value={formData.billAmount}
                   onChange={handleInputChange}
                   className="w-full mt-1 p-2 border rounded-md focus:ring-2 focus:ring-black focus:outline-none"
+                  readOnly={isAdminOrAccount}
                 />
               </div>
             </>
