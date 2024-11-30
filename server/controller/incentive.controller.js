@@ -29,7 +29,7 @@ export const addIncentive = async (req, res) => {
     };
     
 
-    const getReadableDate = (refineDate) => { 
+    const getReadableDate = (refineDate) => {
       const date = new Date(refineDate);
       const year = date.getFullYear();
       const month = String(date.getMonth() + 1).padStart(2, "0"); // Month is 0-based
@@ -41,7 +41,6 @@ export const addIncentive = async (req, res) => {
 
     const readableCreatedDate = getReadableDate(createdDate)
     const readableDate = getDate()
-
  
 
     // Create a new incentive
@@ -120,3 +119,33 @@ export const updateIncentive = async (req, res) => {
   }
 
 }
+
+
+export const getIncentivesInDateRange = async(req, res)  => {
+
+  const {startDateValue, endDateValue} = req.body;
+
+  try {
+
+      // Convert dates to ISODate format
+      const start = new Date(startDateValue);
+      const end = new Date(endDateValue);
+
+      // Fetch records within the date range
+      const incentives = await Incentive.find({
+          date: {
+              $gte: startDateValue,
+              $lte: endDateValue
+          }
+      });
+      console.log(incentives);
+      
+
+      return res.json({success:true, message:"Incentive Recieved", data:incentives});
+      
+    } catch (error) {
+      console.error("Error fetching incentives:", error);
+      return res.json({success:true,  message:"Error"});
+  }
+}
+

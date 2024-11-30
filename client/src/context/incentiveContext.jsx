@@ -11,18 +11,20 @@ const IncentiveContextProvider = (props) => {
     const [allIncentives, setAllIncentives] = useState([])
 
     // Fetch all incentives (GET data)
-  const fetchIncentives = async () => {
-    try {
-      const response = await axios.get(`${URL}/api/incentive/getall`); // Update with your backend URL
-      setIncentives(response.data.data);
-      setAllIncentives(response.data.data);
-      console.log(response.data.data);
+    const fetchIncentives = async () => {
+        // try {
+        //     const response = await axios.get(`${URL}/api/incentive/getall`); // Update with your backend URL
+        //     setIncentives(response.data.data);
+        //     setAllIncentives(response.data.data);
+        //     console.log(response.data.data);
 
-    } catch (err) {
+        // } catch (err) {
 
-      console.error('Error:', err);
-    }
-  };
+        //     console.error('Error:', err);
+        // }
+    };
+
+  
 
     const fetchFilteredIncentives = async () => {
         try {
@@ -40,17 +42,17 @@ const IncentiveContextProvider = (props) => {
         }
     };
 
-    const fetchIncentive = () => {
-        if (userData.role === 'accounts') {
-            fetchIncentives()
-        } else if (userData.role === 'sales') {
-            fetchFilteredIncentives()
-        }
-    }
+    // const fetchIncentive = () => {
+    //     if (userData.role === 'accounts') {
+    //         // fetchIncentives()
+    //     } else if (userData.role === 'sales') {
+    //         fetchFilteredIncentives()
+    //     }
+    // }
 
 
     const contextValue = {
-        fetchIncentives, fetchFilteredIncentives, fetchIncentive, allIncentives, setAllIncentives
+        fetchIncentives, fetchFilteredIncentives, allIncentives, setAllIncentives
     };
 
     return (

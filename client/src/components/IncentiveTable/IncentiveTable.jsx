@@ -4,11 +4,12 @@ import axios from "axios";
 import { FaEdit } from "react-icons/fa";
 import { IncentiveContext } from "../../context/incentiveContext";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { toast } from "react-toastify";
 
 
 const IncentiveTable = ({ setIncentiveFormShow, setIncentiveFormData }) => {
 
-  const { incentives, setIncentives, token, userData, URL } = useContext(CRMContext)
+  const { incentives, setIncentives, token, userData, URL, } = useContext(CRMContext)
   const { fetchIncentive, allIncentives, setAllIncentives } = useContext(IncentiveContext)
   const [startDateValue, setStartDateValue] = useState()
   const [endDateValue, setEndDateValue] = useState()
@@ -18,10 +19,9 @@ const IncentiveTable = ({ setIncentiveFormShow, setIncentiveFormData }) => {
     setIncentiveFormData(item)
   }
 
-
-  useEffect(() => {
-    fetchIncentive()
-  }, [token])
+  // useEffect(() => {
+  //   fetchIncentive()
+  // }, [token])
 
 
   const onCoordinateHandler = (e) => {
@@ -38,6 +38,25 @@ const IncentiveTable = ({ setIncentiveFormShow, setIncentiveFormData }) => {
 
     }
   }
+
+  const filterIncentives = async () => {
+    if (!startDateValue || !endDateValue) return;
+
+    try {
+      const response = await axios.post(`${URL}/api/incentive/datefilter`, { startDateValue, endDateValue })
+
+      if (response.data.success) {
+        toast.success(response.data.message)
+        console.log(response.data.message)
+        setAllIncentives(response.data.data)
+        setIncentives(response.data.data)
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(response.data.message)
+    }
+
+  };
 
 
   const onSearchHandler = (e) => {
@@ -66,24 +85,6 @@ const IncentiveTable = ({ setIncentiveFormShow, setIncentiveFormData }) => {
       });
       setAllIncentives(filterIncentive);
     }
-  };
-
-
-  const filterIncentives = () => {
-    if (!startDateValue || !endDateValue) return;
-
-    const filtered = incentives.filter((incentive) => {
-      const incentiveDate = new Date(incentive.date);
-      console.log(incentiveDate)
-      console.log(startDateValue)
-      console.log(endDateValue)
-      return (
-        incentiveDate >= new Date(startDateValue) &&
-        incentiveDate <= new Date(endDateValue)
-      );
-    });
-
-    setAllIncentives(filtered);
   };
 
 
@@ -125,9 +126,7 @@ const IncentiveTable = ({ setIncentiveFormShow, setIncentiveFormData }) => {
 
       </div>
 
-      {
-        userData.role === "accounts" ? <>
-          <div className="my-2 space-x-2 flex">
+      <div className="my-2 space-x-2 flex">
             <input
               type="date"
               value={startDateValue}
@@ -152,8 +151,6 @@ const IncentiveTable = ({ setIncentiveFormShow, setIncentiveFormData }) => {
             </button>
 
           </div>
-        </> : <></>
-      }
 
       <div className="overflow-x-scroll">
         <table className="min-w-full border-collapse bg-white shadow-md rounded-lg">
