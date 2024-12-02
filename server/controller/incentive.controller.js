@@ -79,26 +79,7 @@ export const getAllIncentives = async (req, res) => {
   }
 };
 
-// Get incentives filtered by name and role
-export const getIncentivesByNameAndRole = async (req, res) => {
-  console.log("run");
 
-  const { userId, startDateValue, endDateValue } = req.body;
-  try {
-    // const saleIncentive = []
-
-    const incentives = await Incentive.find({
-      userId, date: {
-        $gte: startDateValue,
-        $lte: endDateValue
-      }
-    });
-
-    res.status(200).json({ success: true, message: 'Filtered incentives retrieved successfully', data: incentives });
-  } catch (error) {
-    res.status(500).json({ success: false, message: 'Failed to retrieve filtered incentives', error: error.message });
-  }
-};
 
 
 export const updateIncentive = async (req, res) => {
@@ -126,6 +107,27 @@ export const updateIncentive = async (req, res) => {
   }
 
 }
+
+// Get incentives filtered by name and role
+export const getIncentivesByNameAndRole = async (req, res) => {
+  console.log("run");
+
+  const { userId, startDateValue, endDateValue } = req.body;
+  try {
+    // const saleIncentive = []
+
+    const incentives = await Incentive.find({
+      userId, date: {
+        $gte: startDateValue,
+        $lte: endDateValue
+      }
+    });
+
+    res.status(200).json({ success: true, message: 'Filtered incentives retrieved successfully', data: incentives });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to retrieve filtered incentives', error: error.message });
+  }
+};
 
 
 export const getIncentivesInDateRange = async (req, res) => {
