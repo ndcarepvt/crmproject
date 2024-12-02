@@ -132,7 +132,9 @@ const IncentiveTable = ({ setIncentiveFormShow, setIncentiveFormData }) => {
           ) : null}
 
           <button onClick={filterIncentives} className="bg-gray-900 w-[100px] text-white px-2 py-1 md:px-4 md:py-2 rounded-md" >refresh</button>
-          <button onClick={onDownload} className="bg-gray-900 w-[100px] text-white px-2 py-1 md:px-4 md:py-2 rounded-md"> Export excel </button>
+          {
+            userData.role === "accounts" ? <button onClick={onDownload} className="bg-gray-900 w-[100px] text-white px-2 py-1 md:px-4 md:py-2 rounded-md"> Export excel </button> : <></>
+          }
         </div>
 
 

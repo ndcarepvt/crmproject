@@ -11,6 +11,8 @@ const AccountsDashboard = () => {
   return (
     <div className="flex h-screen bg-gray-100 w-[100%]">
 
+      <h1 className='text-3xl'>Dashboard</h1>
+
       {/* <div>
         {incentiveFormShow ? <IncentiveForm setIncentiveFormShow={setIncentiveFormShow} incentiveFormData={incentiveFormData} /> : <></>}
       </div>
