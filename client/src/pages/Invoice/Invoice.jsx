@@ -206,7 +206,7 @@ const Invoice = () => {
   return (
     <div className='bg-gray-100 h-screen'>
       <nav className="flex gap-5 px-20 py-4">
-        {userData?.role === "accountant" && (
+        {userData?.role === "accounts" && (
           <button
             onClick={() => handleGeneratePDF("tax")}
             className="w-full bg-msu-green text-white max-w-[200px] font-semibold p-3 rounded hover:bg-oxley transition"
