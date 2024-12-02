@@ -53,6 +53,9 @@ const IncentiveTable = ({ setIncentiveFormShow, setIncentiveFormData }) => {
       return toast.info("Please Select Date Range")
     };
 
+    console.log(token);
+    
+
     if (userData.role === "sales") {
       try {
         const response = await axios.get(`${URL}/api/incentive/getfilter`, { startDateValue, endDateValue }, {headers: { token}})
@@ -62,10 +65,12 @@ const IncentiveTable = ({ setIncentiveFormShow, setIncentiveFormData }) => {
           console.log(response.data.message)
           setAllIncentives(response.data.data)
           setIncentives(response.data.data)
+        } else {
+          
         }
       } catch (error) {
         console.log(error);
-        toast.error(response.data.message)
+        toast.error(error.response.data.message)
       }
     } else if (userData.role === "accounts") {
       try {
