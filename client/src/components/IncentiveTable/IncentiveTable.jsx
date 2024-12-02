@@ -55,7 +55,7 @@ const IncentiveTable = ({ setIncentiveFormShow, setIncentiveFormData }) => {
 
     if (userData.role === "sales") {
       try {
-        const response = await axios.post(`${URL}/api/incentive/getfilter`, { startDateValue, endDateValue }, {headers:{token}})
+        const response = await axios.get(`${URL}/api/incentive/getfilter`, { startDateValue, endDateValue }, {headers:{token}})
 
         if (response.data.success) {
           toast.success(response.data.message)
