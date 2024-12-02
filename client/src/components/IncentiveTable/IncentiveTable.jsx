@@ -53,18 +53,34 @@ const IncentiveTable = ({ setIncentiveFormShow, setIncentiveFormData }) => {
       return toast.info("Please Select Date Range")
     };
 
-    try {
-      const response = await axios.post(`${URL}/api/incentive/datefilter`, { startDateValue, endDateValue })
+    if (userData.role === "sales") {
+      try {
+        const response = await axios.post(`${URL}/api/incentive/getfilter`, { startDateValue, endDateValue }, {headers:{token}})
 
-      if (response.data.success) {
-        toast.success(response.data.message)
-        console.log(response.data.message)
-        setAllIncentives(response.data.data)
-        setIncentives(response.data.data)
+        if (response.data.success) {
+          toast.success(response.data.message)
+          console.log(response.data.message)
+          setAllIncentives(response.data.data)
+          setIncentives(response.data.data)
+        }
+      } catch (error) {
+        console.log(error);
+        toast.error(response.data.message)
       }
-    } catch (error) {
-      console.log(error);
-      toast.error(response.data.message)
+    } else if (userData.role === "accounts") {
+      try {
+        const response = await axios.post(`${URL}/api/incentive/datefilter`, { startDateValue, endDateValue })
+
+        if (response.data.success) {
+          toast.success(response.data.message)
+          console.log(response.data.message)
+          setAllIncentives(response.data.data)
+          setIncentives(response.data.data)
+        }
+      } catch (error) {
+        console.log(error);
+        toast.error(response.data.message)
+      }
     }
 
   };

@@ -19,29 +19,29 @@ export const addIncentive = async (req, res) => {
       return res.json({ success: false, message: 'Invoice already add to another coordinator' });
     }
 
-    const getDate = () => { 
+    const getDate = () => {
       const date = new Date();
       const year = date.getFullYear();
       const month = String(date.getMonth() + 1).padStart(2, "0"); // Month is 0-based
       const day = String(date.getDate()).padStart(2, "0");
-    
+
       return `${year}-${month}-${day}`;
     };
-    
+
 
     const getReadableDate = (refineDate) => {
       const date = new Date(refineDate);
       const year = date.getFullYear();
       const month = String(date.getMonth() + 1).padStart(2, "0"); // Month is 0-based
       const day = String(date.getDate()).padStart(2, "0");
-    
+
       return `${year}-${month}-${day}`;
     };
-    
+
 
     const readableCreatedDate = getReadableDate(createdDate)
     const readableDate = getDate()
- 
+
 
     // Create a new incentive
     const incentive = new Incentive({
@@ -83,11 +83,16 @@ export const getAllIncentives = async (req, res) => {
 export const getIncentivesByNameAndRole = async (req, res) => {
   console.log("run");
 
+  const { userId, startDateValue, endDateValue } = req.body;
   try {
-    const { userId } = req.body;
     // const saleIncentive = []
 
-    const incentives = await Incentive.find({ userId });
+    const incentives = await Incentive.find({
+      userId, date: {
+        $gte: startDateValue,
+        $lte: endDateValue
+      }
+    });
 
     res.status(200).json({ success: true, message: 'Filtered incentives retrieved successfully', data: incentives });
   } catch (error) {
@@ -123,31 +128,31 @@ export const updateIncentive = async (req, res) => {
 }
 
 
-export const getIncentivesInDateRange = async(req, res)  => {
+export const getIncentivesInDateRange = async (req, res) => {
 
-  const {startDateValue, endDateValue} = req.body;
+  const { startDateValue, endDateValue } = req.body;
 
   try {
 
-      // Convert dates to ISODate format
-      const start = new Date(startDateValue);
-      const end = new Date(endDateValue);
+    // Convert dates to ISODate format
+    const start = new Date(startDateValue);
+    const end = new Date(endDateValue);
 
-      // Fetch records within the date range
-      const incentives = await Incentive.find({
-          date: {
-              $gte: startDateValue,
-              $lte: endDateValue
-          }
-      });
-      console.log(incentives);
-      
+    // Fetch records within the date range
+    const incentives = await Incentive.find({
+      date: {
+        $gte: startDateValue,
+        $lte: endDateValue
+      }
+    });
+    console.log(incentives);
 
-      return res.json({success:true, message:"Incentive Recieved", data:incentives});
-      
-    } catch (error) {
-      console.error("Error fetching incentives:", error);
-      return res.json({success:true,  message:"Error"});
+
+    return res.json({ success: true, message: "Incentive Recieved", data: incentives });
+
+  } catch (error) {
+    console.error("Error fetching incentives:", error);
+    return res.json({ success: true, message: "Error" });
   }
 }
 
