@@ -136,10 +136,6 @@ export const getIncentivesInDateRange = async (req, res) => {
 
   try {
 
-    // Convert dates to ISODate format
-    const start = new Date(startDateValue);
-    const end = new Date(endDateValue);
-
     // Fetch records within the date range
     const incentives = await Incentive.find({
       date: {
