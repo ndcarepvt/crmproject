@@ -97,7 +97,7 @@ export const getIncentivesByNameAndRole = async (req, res) => {
 
 
 export const updateIncentive = async (req, res) => {
-  const { receivedAmount, commissionAmount, invoiceId, status, bankCharges, supportCharges, patientId } = req.body;
+  const { receivedAmount, commissionAmount, invoiceId, status, bankCharges, supportCharges, patientId, courierCharge, packingCharges } = req.body;
   console.log("run");
 
   try {
@@ -109,6 +109,8 @@ export const updateIncentive = async (req, res) => {
     incentive.commissionAmount = commissionAmount;
     incentive.bankCharges = bankCharges;
     incentive.supportCharges = supportCharges;
+    incentive.courierCharge = courierCharge;
+    incentive.packingCharges = packingCharges;
 
     await incentive.save();
     return res.json({ success: true, message: "Incentive updated" })

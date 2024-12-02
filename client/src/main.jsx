@@ -11,6 +11,7 @@ import Login from './pages/Login/Login.jsx';
 import IncentiveContextProvider from './context/incentiveContext.jsx';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import Incentive from './pages/Incentive/Incentive.jsx';
 
 // SecureRoute Component
 const SecureRoute = ({ children }) => {
@@ -36,6 +37,11 @@ createRoot(document.getElementById('root')).render(
               <Route path="invoice" element={
                 <SecureRoute>
                   <Invoice />
+                </SecureRoute>
+              } />
+              <Route path="incentive" element={
+                <SecureRoute>
+                  <Incentive />
                 </SecureRoute>
               } />
 

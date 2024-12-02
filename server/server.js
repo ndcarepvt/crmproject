@@ -14,14 +14,15 @@ const app = express()
 
 // Intialize middleware
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(cookieParser())
 app.use(cors({
   origin: process.env.CLIENT_URL, // or '*' to allow all origins
-  methods: ["GET","HEAD","PUT","PATCH","POST","DELETE"],
+  methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
   credentials: true, // If your frontend is sending cookies or authentication headers
   optionsSuccessStatus: 204 // For legacy browser support
 }));
-app.use(express.urlencoded({extended: true}))
-app.use(cookieParser())
+
 
 // Connect Database
 connectDB()
@@ -30,14 +31,14 @@ connectDB()
 app.use('/api/incentive', incentiveRouter)
 app.use('/api/user', userRouter)
 
-app.get('/' ,(req, res)=>{
+app.get('/', (req, res) => {
   res.send("API Working")
 })
 
-app.post('/webhook' ,(req, res)=>{
+app.post('/webhook', (req, res) => {
   console.log(req.body)
 })
 
-app.listen(port,()=>{
+app.listen(port, () => {
   console.log(`The server is running on http://localhost:${port}`)
 })

@@ -4,6 +4,7 @@ import { MdDashboard } from "react-icons/md";
 import { FaFileInvoice } from "react-icons/fa6";
 import { CRMContext } from "../../context/crmContext";
 import { assets } from "../../assets/assets";
+import { GrDocumentPerformance } from "react-icons/gr"
 
 const DashSidebar = () => {
   const { userData } = useContext(CRMContext);
@@ -15,7 +16,7 @@ const DashSidebar = () => {
   const allRoutes = [
     { path: "/dashboard", name: "Dashboard", icon: <MdDashboard /> },
     { path: "/invoice", name: "Invoice", icon: <FaFileInvoice /> },
-    { path: "/users", name: "Users" },
+    { path: "/incentive", name: "Incentive", icon:<GrDocumentPerformance /> },
     { path: "/reports", name: "Reports" },
     { path: "/settings", name: "Settings" },
     { path: "/customers", name: "Customers" },

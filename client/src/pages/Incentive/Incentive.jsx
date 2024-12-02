@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import IncentiveForm from '../../IncentiveForm/IncentiveForm'
-import IncentiveTable from '../../IncentiveTable/IncentiveTable'
+import IncentiveForm from '../../components/IncentiveForm/IncentiveForm'
+import IncentiveTable from '../../components/IncentiveTable/IncentiveTable'
 
-const AccountsDashboard = () => {
+const Incentive = () => {
 
   const [incentiveFormShow, setIncentiveFormShow] = useState(false)
   const [incentiveFormData, setIncentiveFormData] = useState()
@@ -11,19 +11,19 @@ const AccountsDashboard = () => {
   return (
     <div className="flex h-screen bg-gray-100 w-[100%]">
 
-      {/* <div>
+      <div>
         {incentiveFormShow ? <IncentiveForm setIncentiveFormShow={setIncentiveFormShow} incentiveFormData={incentiveFormData} /> : <></>}
       </div>
 
-      Main Content
+      {/* Main Content */}
 
       <div className="p-6 w-[100%]">
-        Current Tasks
+        {/* Current Tasks */}
         <IncentiveTable setIncentiveFormShow={setIncentiveFormShow} setIncentiveFormData={setIncentiveFormData} />
-      </div> */}
+      </div>
 
     </div>
   )
 }
 
-export default AccountsDashboard
+export default Incentive

@@ -6,11 +6,12 @@ import { toast } from "react-toastify";
 import { IncentiveContext } from "../../context/incentiveContext";
 
 const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
+  const [supportMul, setSupportMul] = useState()
   const { userData, setIncentives, URL, token, setLoading } = useContext(CRMContext); // Get user data from context
   const { fetchIncentive } = useContext(IncentiveContext); // Get user data from context
   const { role } = userData; // Assume `role` contains the current user's role
   const isSalesperson = role === "sales";
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const isAdminOrAccount = role === "admin" || role === "accounts";
   const [formData, setFormData] = useState({
     name: '',
@@ -157,13 +158,18 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
     // Calculate bank charges as a percentage
     const bankCharge = (receivedAmount * bankCharges) / 100;
 
-    // calculate recievedpayment without charges
-    const actualRecievedAmount = receivedAmount - bankCharge - supportCharges - packingCharges - courierCharge;
+    let actualRecievedAmount;
+
+    if (supportMul === "add") {
+      actualRecievedAmount = (receivedAmount - bankCharge - packingCharges - courierCharge) + supportCharges;
+    } else if (supportMul === "subtract") {
+      // calculate recievedpayment without charges
+      actualRecievedAmount = receivedAmount - bankCharge - packingCharges - courierCharge - supportCharges;
+    }
 
     // Calculate commission
     const commissionAmount = (actualRecievedAmount * commissionRate) / 100;
-
-
+    
     return commissionAmount;
   }
 
@@ -186,21 +192,21 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
     const supportCharges = formData.supportCharges
     let packingCharges = formData.packingCharges
     let courierCharge = formData.courierCharge
-
-    if (formData.invoiceCurrency === "USD") {
+    const currency = formData.invoiceCurrency
+    console.log(currency);
+    
+    if (currency === "USD") {
       packingCharges = 400
       formData.packingCharges = 400
-    } else if (formData.invoiceCurrency === "INR") {
-      packingCharges = 200
-      formData.packingCharges = 200
-    }
-    if (formData.invoiceCurrency === "USD") {
       courierCharge = 5000
       formData.courierCharge = 5000
-    } else if (formData.invoiceCurrency === "INR") {
+    } else if (currency === "INR") {
+      packingCharges = 200
+      formData.packingCharges = 200
       courierCharge = 500
       formData.courierCharge = 500
     }
+
 
     // Ensure `calculateCommission` is defined
     if (typeof calculateCommission !== "function") {
@@ -215,25 +221,28 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
     formData.commissionAmount = commissionAmount
 
 
-    try {
+    setTimeout(async () => {
+      try {
+        console.log(formData);
+        
+        const response = await axios.post(`${URL}/api/incentive/update`, formData);
+        console.log(response);
 
-      const response = await axios.post(`${URL}/api/incentive/update`, formData);
+        if (response.data.success) {
+          toast.success(response.data.message)
+          setIncentiveFormShow(false)
+          setLoading(false)
+        } else {
+          toast.error(response.data.message)
+          setLoading(false)
+        }
 
-      if (response.data.success) {
-        toast.success(response.data.message)
-        setIncentiveFormShow(false)
-        setLoading(false)
-        fetchIncentive()
-      } else {
-        toast.error(response.data.message)
-        setLoading(false)
+        console.log("Response:", response.data);
+      } catch (err) {
+        console.error("Error:", err);
+        alert("Failed to update incentive. Please try again.");
       }
-
-      console.log("Response:", response.data);
-    } catch (err) {
-      console.error("Error:", err);
-      alert("Failed to update incentive. Please try again.");
-    }
+    }, 2000);
 
   };
 
@@ -401,15 +410,29 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
               >
                 Support Charges
               </label>
-              <input
-                type="text"
-                name="supportCharges"
-                id="supportCharges"
-                placeholder="Enter Support Charges"
-                className="w-full mt-1 p-2 border rounded-md focus:ring-2 focus:ring-black focus:outline-none"
-                value={formData.supportCharges === 0 ? "" : formData.supportCharges}
-                onChange={(e) => setFormData((prev) => ({ ...prev, supportCharges: Number(e.target.value), }))} // Add this to handle updates
-              />
+              <div className="flex w-full">
+                <input
+                  type="text"
+                  name="supportCharges"
+                  id="supportCharges"
+                  placeholder="Enter Support Charges"
+                  className="w-[65%] mt-1 p-2 border rounded-md focus:ring-2 focus:ring-black focus:outline-none"
+                  value={formData.supportCharges === 0 ? "" : formData.supportCharges}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, supportCharges: Number(e.target.value), }))} // Add this to handle updates
+                />
+                <select
+                  id="status"
+                  name="status"
+                  value={supportMul}
+                  onChange={(e) => setSupportMul(e.target.value)}
+                  className="w-[35%] mt-1 p-2 border rounded-md focus:ring-2 focus:ring-black focus:outline-none"
+                >
+                  <option value="">-- Select --</option>
+                  <option value="add">Add</option>
+                  <option value="subtract">Subtract</option>
+                </select>
+              </div>
+
             </div>
           )}
 

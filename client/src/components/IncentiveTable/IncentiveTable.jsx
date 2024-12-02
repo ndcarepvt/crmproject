@@ -1,10 +1,11 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { CRMContext } from "../../context/crmContext";
 import axios from "axios";
 import { FaEdit } from "react-icons/fa";
 import { IncentiveContext } from "../../context/incentiveContext";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { toast } from "react-toastify";
+import { useDownloadExcel } from 'react-export-table-to-excel';
 
 
 const IncentiveTable = ({ setIncentiveFormShow, setIncentiveFormData }) => {
@@ -13,6 +14,14 @@ const IncentiveTable = ({ setIncentiveFormShow, setIncentiveFormData }) => {
   const { fetchIncentive, allIncentives, setAllIncentives } = useContext(IncentiveContext)
   const [startDateValue, setStartDateValue] = useState()
   const [endDateValue, setEndDateValue] = useState()
+  const tableRef = useRef(null);
+
+  const { onDownload } = useDownloadExcel({
+    currentTableRef: tableRef.current,
+    filename: 'Incentives',
+    sheet: 'Incentive'
+  })
+
 
   const onEditHandler = (item) => {
     setIncentiveFormShow(true)
@@ -40,7 +49,9 @@ const IncentiveTable = ({ setIncentiveFormShow, setIncentiveFormData }) => {
   }
 
   const filterIncentives = async () => {
-    if (!startDateValue || !endDateValue) return;
+    if (!startDateValue || !endDateValue) {
+      return toast.info("Please Select Date Range")
+    };
 
     try {
       const response = await axios.post(`${URL}/api/incentive/datefilter`, { startDateValue, endDateValue })
@@ -120,40 +131,41 @@ const IncentiveTable = ({ setIncentiveFormShow, setIncentiveFormData }) => {
             </select>
           ) : null}
 
-          <button onClick={fetchIncentive} className="bg-gray-900 w-[100px] text-white px-2 py-1 md:px-4 md:py-2 rounded-md" >refresh</button>
+          <button onClick={filterIncentives} className="bg-gray-900 w-[100px] text-white px-2 py-1 md:px-4 md:py-2 rounded-md" >refresh</button>
+          <button onClick={onDownload} className="bg-gray-900 w-[100px] text-white px-2 py-1 md:px-4 md:py-2 rounded-md"> Export excel </button>
         </div>
 
 
       </div>
 
       <div className="my-2 space-x-2 flex">
-            <input
-              type="date"
-              value={startDateValue}
-              onChange={(e) => setStartDateValue(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700"
-            />
-            <input
-              type="date"
-              value={endDateValue}
-              onChange={(e) => setEndDateValue(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700"
-            />
+        <input
+          type="date"
+          value={startDateValue}
+          onChange={(e) => setStartDateValue(e.target.value)}
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700"
+        />
+        <input
+          type="date"
+          value={endDateValue}
+          onChange={(e) => setEndDateValue(e.target.value)}
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700"
+        />
 
 
-            {/* {console.log(startDateValue, endDateValue)} */}
+        {/* {console.log(startDateValue, endDateValue)} */}
 
-            <button
-              className="bg-gray-900 text-white px-2 py-1 md:px-4 md:py-2 rounded-md"
-              onClick={filterIncentives}
-            >
-              Search
-            </button>
+        <button
+          className="bg-gray-900 text-white px-2 py-1 md:px-4 md:py-2 rounded-md"
+          onClick={filterIncentives}
+        >
+          Search
+        </button>
 
-          </div>
+      </div>
 
       <div className="overflow-x-scroll">
-        <table className="min-w-full border-collapse bg-white shadow-md rounded-lg">
+        <table className="min-w-full border-collapse bg-white shadow-md rounded-lg" ref={tableRef}>
           <thead>
             <tr className="bg-gray-100">
               <th className="p-4 text-center font-semibold">No</th>
