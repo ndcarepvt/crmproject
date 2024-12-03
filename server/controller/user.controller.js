@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
 const registerUser = async (req, res) => {
-    const { name, email, password, phoneNumber, role, pages, commission } = req.body;
+    const { name, password, role, pages, commission } = req.body;
 
     try {
         // Check if user already exists
@@ -34,11 +34,8 @@ const registerUser = async (req, res) => {
             
         // Create a new user
         const newUser = new User({
-            // userId: userId,
             name: name,
-            email: email,
             password: hashPassword,
-            phoneNumber: phoneNumber,
             role: role,
             pages: pages,
             commission: commission
