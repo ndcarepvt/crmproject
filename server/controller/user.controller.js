@@ -4,41 +4,38 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
 const registerUser = async (req, res) => {
-    const { name, password, role, pages, commission } = req.body;
+    const { name, password, role, pages = [], commission = 0 } = req.body;
 
     try {
+        // Validate input
+        if (!name || !password || !role) {
+            return res.status(400).send({ success: false, message: "Missing required fields" });
+        }
+
+        if (password.length <= 4) {
+            return res.status(400).send({ success: false, message: "Enter a strong password" });
+        }
+
         // Check if user already exists
         const existUser = await User.findOne({ name });
         if (existUser) {
-            return res.send({ success: false, message: "User already exists" });
+            return res.status(400).send({ success: false, message: "User already exists" });
         }
 
-        // // Validate email
-        // if (!validator.isEmail(email)) {
-        //     return res.send({ success: false, message: "Enter a valid email" });
-        // }
+        // Hash the password
+        const hashPassword = await bcrypt.hash(password, 10);
 
-        // Validate password length
-        if (password.length <= 4) {
-            return res.send({ success: false, message: "Enter a strong password" });
-        }
+        // Generate a unique userId (e.g., by counting documents or an increment logic)
+        // const lastUser = await User.findOne().sort({ userId: -1 }).select('userId');
+        // const userId = lastUser ? lastUser.userId + 1 : 1;
 
-        // Generate a hashed password
-        const salt = await bcrypt.genSalt(10);
-        const hashPassword = await bcrypt.hash(password, salt);
-
-        // // Find the highest userId and increment
-        // const lastUser = await User.findOne().sort({ userId: -1 }); // Get the user with the highest userId
-        // const userId = lastUser ? lastUser.userId + 1 : 1; // Increment or start at 1 if no users exist
-
-            
         // Create a new user
         const newUser = new User({
-            name: name,
+            name,
             password: hashPassword,
-            role: role,
-            pages: pages,
-            commission: commission
+            role,
+            pages,
+            commission,
         });
 
         // Save the user to the database
@@ -47,14 +44,18 @@ const registerUser = async (req, res) => {
         // Generate a token
         const token = generateToken(user._id);
 
-        // Send a response
-        res.send({ success: true, authData: token, message: "User Registered" });
-
+        // Send a success response
+        res.status(201).send({
+            success: true,
+            authData: token,
+            message: "User Registered",
+        });
     } catch (error) {
-        console.log(error);
-        res.json({ success: false, message: "Error" });
+        console.error("Registration Error:", error);
+        res.status(500).send({ success: false, message: "Server error" });
     }
 };
+
 
 
 const generateToken = (id) =>{
