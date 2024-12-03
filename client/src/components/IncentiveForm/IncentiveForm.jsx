@@ -7,6 +7,7 @@ import { IncentiveContext } from "../../context/incentiveContext";
 
 const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
   const [supportMul, setSupportMul] = useState()
+  const [bankCharge, setBankCharge] = useState()
   const { userData, setIncentives, URL, token, setLoading } = useContext(CRMContext); // Get user data from context
   const { fetchIncentive } = useContext(IncentiveContext); // Get user data from context
   const { role } = userData; // Assume `role` contains the current user's role
@@ -22,6 +23,7 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
     commission: '',
     createdDate: '',
     billAmount: '',
+    bankCharges: 0,
     courierCharge: 0,
     packingCharges: 0,
     receivedAmount: 0,
@@ -57,7 +59,13 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
         ...prev,
         ...incentiveFormData,
       }));
+
+      let percentBankCharge = (incentiveFormData.bankCharges / incentiveFormData.receivedAmount) * 100
+      console.log(percentBankCharge);
+      setBankCharge(percentBankCharge)
     }
+
+
   }, [userData, incentiveFormData]);
 
   const handleSubmit = async (e) => {
@@ -135,7 +143,6 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
         toast.success(response.data.message)
         setIncentiveFormShow(false)
         setLoading(false)
-        fetchIncentive()
         navigate('/dashboard');
         console.log("Response:", response.data);
       } else {
@@ -158,6 +165,9 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
     // Calculate bank charges as a percentage
     const bankCharge = (receivedAmount * bankCharges) / 100;
 
+
+    formData.bankCharges = bankCharge
+
     let actualRecievedAmount;
 
     if (supportMul === "add") {
@@ -167,9 +177,11 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
       actualRecievedAmount = receivedAmount - bankCharge - packingCharges - courierCharge - supportCharges;
     }
 
+
     // Calculate commission
     const commissionAmount = (actualRecievedAmount * commissionRate) / 100;
-    
+
+    formData.bankCharges = bankCharge
     return commissionAmount;
   }
 
@@ -188,13 +200,12 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
     // Extract values with fallback to avoid runtime errors
     const commissionRate = formData.commission
     const receivedAmount = formData.receivedAmount
-    const bankCharges = formData.bankCharges
     const supportCharges = formData.supportCharges
     let packingCharges = formData.packingCharges
     let courierCharge = formData.courierCharge
     const currency = formData.invoiceCurrency
     console.log(currency);
-    
+
     if (currency === "USD") {
       packingCharges = 400
       formData.packingCharges = 400
@@ -215,7 +226,7 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
     }
 
     // Calculate commission and update formData immutably
-    const commissionAmount = calculateCommission(receivedAmount, commissionRate, bankCharges, supportCharges, packingCharges, courierCharge)
+    const commissionAmount = calculateCommission(receivedAmount, commissionRate, bankCharge, supportCharges, packingCharges, courierCharge)
     console.log(commissionAmount);
 
     formData.commissionAmount = commissionAmount
@@ -224,7 +235,7 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
     setTimeout(async () => {
       try {
         console.log(formData);
-        
+
         const response = await axios.post(`${URL}/api/incentive/update`, formData);
         console.log(response);
 
@@ -388,7 +399,7 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
                 htmlFor="bankCharges"
                 className="block text-sm font-medium"
               >
-                Bank Charges
+                Bank Charges (%)
               </label>
               <input
                 type="text"
@@ -396,8 +407,8 @@ const IncentiveForm = ({ setIncentiveFormShow, incentiveFormData }) => {
                 id="bankCharges"
                 placeholder="Enter Bank Charges"
                 className="w-full mt-1 p-2 border rounded-md focus:ring-2 focus:ring-black focus:outline-none"
-                value={formData.bankCharges === 0 ? "" : formData.bankCharges}
-                onChange={(e) => setFormData((prev) => ({ ...prev, bankCharges: Number(e.target.value), }))} // Add this to handle updates
+                value={bankCharge}
+                onChange={(e) => setBankCharge(e.target.value)} // Add this to handle updates
               />
             </div>
           )}
