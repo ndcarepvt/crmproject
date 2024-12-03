@@ -8,15 +8,15 @@ const registerUser = async (req, res) => {
 
     try {
         // Check if user already exists
-        const existUser = await User.findOne({ email });
+        const existUser = await User.findOne({ name });
         if (existUser) {
             return res.send({ success: false, message: "User already exists" });
         }
 
-        // Validate email
-        if (!validator.isEmail(email)) {
-            return res.send({ success: false, message: "Enter a valid email" });
-        }
+        // // Validate email
+        // if (!validator.isEmail(email)) {
+        //     return res.send({ success: false, message: "Enter a valid email" });
+        // }
 
         // Validate password length
         if (password.length <= 4) {
